@@ -1,0 +1,640 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>Host Dashboard · ភា សុផាក់ &amp; បក់ ធាវី</title>
+<link href="https://fonts.googleapis.com/css2?family=Moul&family=Battambang:wght@400;700&family=Cinzel:wght@400;600&family=Cormorant+Garamond:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet">
+<style>
+:root {
+  --navy:#0D1B3E; --navy2:#162448; --navy3:#1F3060;
+  --gold:#C9A84C; --gold-l:#E8D08A; --gold-p:#F5EAC8; --gold-d:#9A7A2E;
+  --ivory:#FFFDF5; --cream:#FAF5E4; --txt:#2C1F06; --muted:#7A6030;
+  --green:#2E7D52; --red-soft:#8B2020;
+  --fmoul:'Moul',serif; --fbatt:'Battambang',sans-serif;
+  --fcin:'Cinzel',serif; --fcor:'Cormorant Garamond',serif;
+  --r:12px;
+}
+*,*::before,*::after { box-sizing:border-box; margin:0; padding:0; }
+html,body { min-height:100%; background:#0a1020; font-family:var(--fbatt),sans-serif; }
+
+/* ── LOGIN SCREEN ── */
+#loginScreen {
+  min-height:100vh;
+  display:flex; flex-direction:column;
+  align-items:center; justify-content:center;
+  background:radial-gradient(ellipse at 50% 40%, #1a2d60 0%, #0a1020 70%);
+  padding:24px;
+  gap:0;
+}
+.login-lotus { margin-bottom:20px; animation:float 4s ease-in-out infinite; }
+.login-title { font-family:var(--fmoul); font-size:16px; color:var(--gold); text-align:center; line-height:1.8; margin-bottom:4px; }
+.login-sub { font-family:var(--fcin); font-size:8px; letter-spacing:.24em; text-transform:uppercase; color:rgba(201,168,76,.5); text-align:center; margin-bottom:28px; }
+.login-card {
+  width:100%; max-width:360px;
+  background:rgba(255,253,245,.04);
+  border:.5px solid rgba(201,168,76,.2);
+  border-radius:18px; padding:28px 24px 24px;
+  display:flex; flex-direction:column; gap:14px;
+  backdrop-filter:blur(8px);
+}
+.login-label { font-family:var(--fcin); font-size:7.5px; letter-spacing:.22em; text-transform:uppercase; color:rgba(201,168,76,.55); display:block; margin-bottom:6px; }
+.login-input {
+  width:100%; padding:14px 16px;
+  background:rgba(255,253,245,.07);
+  border:.5px solid rgba(201,168,76,.25); border-radius:var(--r);
+  font-family:var(--fcor); font-size:22px; color:var(--ivory);
+  outline:none; text-align:center; letter-spacing:.4em;
+  transition:border-color .2s;
+}
+.login-input:focus { border-color:var(--gold); }
+.login-btn {
+  width:100%; padding:14px; background:var(--gold); border:none;
+  border-radius:30px; font-family:var(--fcin); font-size:10px;
+  letter-spacing:.22em; text-transform:uppercase; color:var(--navy);
+  cursor:pointer; font-weight:600; transition:background .2s;
+}
+.login-btn:active { background:var(--gold-d); }
+.login-err { font-family:var(--fbatt); font-size:13px; color:#e07070; text-align:center; display:none; }
+.login-hint { font-family:var(--fcor); font-size:12px; font-style:italic; color:rgba(255,253,245,.25); text-align:center; }
+
+/* ── DASHBOARD ── */
+#dashboard { display:none; min-height:100vh; background:var(--cream); }
+
+/* Header */
+.db-header {
+  background:linear-gradient(135deg, var(--navy) 0%, var(--navy3) 100%);
+  padding:20px 18px 18px;
+  position:sticky; top:0; z-index:100;
+  border-bottom:.5px solid rgba(201,168,76,.2);
+}
+.db-header-top { display:flex; align-items:flex-start; justify-content:space-between; margin-bottom:14px; }
+.db-branding {}
+.db-title { font-family:var(--fcin); font-size:14px; letter-spacing:.18em; color:var(--gold); display:block; }
+.db-names { font-family:var(--fmoul); font-size:14px; color:var(--gold-l); display:block; line-height:1.6; margin-top:2px; }
+.db-date { font-family:var(--fcin); font-size:7px; letter-spacing:.18em; text-transform:uppercase; color:rgba(201,168,76,.45); display:block; margin-top:3px; }
+.db-logout { font-family:var(--fcin); font-size:7px; letter-spacing:.12em; text-transform:uppercase; color:rgba(201,168,76,.4); background:none; border:.5px solid rgba(201,168,76,.18); padding:6px 12px; border-radius:20px; cursor:pointer; transition:all .2s; white-space:nowrap; }
+.db-logout:active { color:var(--gold); border-color:var(--gold); }
+
+/* Stats */
+.stat-grid { display:grid; grid-template-columns:repeat(3,1fr); gap:8px; }
+.stat-card { background:rgba(255,253,245,.07); border:.5px solid rgba(201,168,76,.2); border-radius:10px; padding:10px 6px; text-align:center; }
+.stat-val { font-family:var(--fcin); font-size:24px; font-weight:600; color:var(--gold); display:block; line-height:1; }
+.stat-lbl { font-family:var(--fbatt); font-size:11px; color:rgba(201,168,76,.55); display:block; margin-top:4px; }
+
+/* Tabs */
+.tabs { display:flex; border-bottom:.5px solid rgba(201,168,76,.2); margin-top:12px; }
+.tab { flex:1; padding:8px 4px; font-family:var(--fcin); font-size:7.5px; letter-spacing:.14em; text-transform:uppercase; color:rgba(201,168,76,.4); background:none; border:none; cursor:pointer; border-bottom:2px solid transparent; transition:all .2s; }
+.tab.on { color:var(--gold); border-bottom-color:var(--gold); }
+
+/* Body */
+.db-body { padding:16px 16px 80px; display:flex; flex-direction:column; gap:14px; }
+
+/* Section */
+.section-title { font-family:var(--fcin); font-size:7.5px; letter-spacing:.22em; text-transform:uppercase; color:var(--gold-d); padding-bottom:8px; border-bottom:.5px solid #E8D08A; display:flex; align-items:center; justify-content:space-between; }
+.section-count { background:var(--gold-p); color:var(--gold-d); font-size:9px; padding:2px 8px; border-radius:20px; }
+
+/* Add guest */
+.add-box { background:#fff; border:.5px solid #E8D08A; border-radius:var(--r); padding:14px; display:flex; flex-direction:column; gap:10px; }
+.add-row { display:flex; gap:8px; }
+.add-in {
+  flex:1; padding:11px 13px;
+  background:var(--cream); border:.5px solid #E8D08A; border-radius:var(--r);
+  font-family:var(--fbatt); font-size:14px; color:var(--txt);
+  outline:none; transition:border-color .2s;
+}
+.add-in:focus { border-color:var(--gold); }
+.add-in::placeholder { font-family:var(--fcor); font-style:italic; color:#C4A84A; font-size:13px; }
+.add-btn { padding:11px 16px; background:var(--gold); border:none; border-radius:var(--r); color:var(--navy); font-size:20px; cursor:pointer; line-height:1; font-weight:700; transition:background .15s; }
+.add-btn:active { background:var(--gold-d); }
+.add-hint { font-family:var(--fcor); font-size:12px; font-style:italic; color:var(--muted); }
+
+/* Guest list */
+.guest-list { display:flex; flex-direction:column; gap:8px; }
+.gi { background:#fff; border:.5px solid #E8D08A; border-radius:var(--r); overflow:hidden; transition:box-shadow .2s; }
+.gi:hover { box-shadow:0 2px 12px rgba(201,168,76,.1); }
+.gi-main { display:flex; align-items:center; gap:11px; padding:12px 14px; }
+.gi-av { width:36px; height:36px; min-width:36px; border-radius:50%; background:var(--gold-p); display:flex; align-items:center; justify-content:center; font-family:var(--fcin); font-size:12px; color:var(--gold-d); font-weight:600; }
+.gi-info { flex:1; min-width:0; }
+.gi-name { font-family:var(--fbatt); font-size:14px; color:var(--txt); display:block; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+.gi-meta { font-family:var(--fcin); font-size:6.5px; letter-spacing:.1em; text-transform:uppercase; color:var(--muted); display:block; margin-top:2px; }
+.gi-actions { display:flex; align-items:center; gap:6px; }
+.gi-del { background:none; border:none; color:#D4B560; cursor:pointer; font-size:16px; padding:4px; transition:color .2s; line-height:1; }
+.gi-del:active { color:#c0392b; }
+.gi-link-row { border-top:.5px solid var(--gold-p); background:var(--gold-p); padding:9px 14px; display:flex; align-items:center; gap:8px; }
+.gi-url { flex:1; font-family:var(--fcor); font-size:11px; color:var(--txt); font-style:italic; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; opacity:.7; }
+.gi-copy { font-family:var(--fcin); font-size:7px; letter-spacing:.12em; text-transform:uppercase; color:var(--gold-d); background:#fff; border:.5px solid var(--gold); border-radius:20px; padding:5px 11px; cursor:pointer; white-space:nowrap; transition:all .2s; }
+.gi-copy:active { background:var(--gold-l); }
+.gi-copy.done { background:var(--green); color:#fff; border-color:var(--green); }
+.gi-share { font-family:var(--fcin); font-size:7px; letter-spacing:.12em; text-transform:uppercase; color:var(--navy); background:var(--gold); border:.5px solid var(--gold-d); border-radius:20px; padding:5px 11px; cursor:pointer; white-space:nowrap; transition:all .2s; }
+.gi-share:active { background:var(--gold-d); }
+
+/* Empty state */
+.empty { text-align:center; padding:32px 20px; }
+.empty-icon { font-size:36px; display:block; margin-bottom:10px; opacity:.4; }
+.empty-kh { font-family:var(--fmoul); font-size:14px; color:var(--muted); display:block; line-height:1.7; }
+.empty-en { font-family:var(--fcor); font-size:13px; font-style:italic; color:var(--muted); display:block; margin-top:3px; }
+
+/* Bulk section */
+.bulk-box { background:#fff; border:.5px solid #E8D08A; border-radius:var(--r); padding:14px; display:flex; flex-direction:column; gap:10px; }
+.bulk-label { font-family:var(--fbatt); font-size:13px; color:var(--txt); display:block; }
+.bulk-ta { width:100%; min-height:100px; padding:11px 13px; background:var(--cream); border:.5px solid #E8D08A; border-radius:var(--r); font-family:var(--fbatt); font-size:14px; color:var(--txt); outline:none; resize:vertical; line-height:1.8; transition:border-color .2s; }
+.bulk-ta:focus { border-color:var(--gold); }
+.bulk-hint { font-family:var(--fcor); font-size:12px; font-style:italic; color:var(--muted); }
+.bulk-btn { padding:12px; background:var(--navy); border:none; border-radius:30px; font-family:var(--fcin); font-size:9px; letter-spacing:.2em; text-transform:uppercase; color:var(--gold); cursor:pointer; transition:background .2s; }
+.bulk-btn:active { background:var(--navy3); }
+
+/* Export */
+.export-row { display:flex; gap:8px; }
+.export-btn { flex:1; display:flex; align-items:center; justify-content:center; gap:7px; font-family:var(--fcin); font-size:7.5px; letter-spacing:.14em; text-transform:uppercase; color:var(--gold-d); background:var(--gold-p); border:.5px solid var(--gold); border-radius:30px; padding:12px; cursor:pointer; transition:background .2s; }
+.export-btn:active { background:var(--gold-l); }
+.export-btn.dark { background:var(--navy); color:var(--gold-l); border-color:rgba(201,168,76,.3); }
+.export-btn.dark:active { background:var(--navy3); }
+
+/* Share preview modal */
+.mo { position:fixed; inset:0; background:rgba(0,0,0,.6); z-index:600; display:flex; align-items:flex-end; justify-content:center; opacity:0; pointer-events:none; transition:opacity .25s; }
+.mo.open { opacity:1; pointer-events:all; }
+.mo-sheet { width:100%; max-width:480px; background:var(--ivory); border-radius:20px 20px 0 0; padding:22px 20px 40px; transform:translateY(100%); transition:transform .35s cubic-bezier(.4,0,.2,1); display:flex; flex-direction:column; gap:14px; }
+.mo.open .mo-sheet { transform:translateY(0); }
+.mo-bar { width:36px; height:4px; background:var(--gold-l); border-radius:2px; margin:-6px auto 4px; }
+.mo-title { font-family:var(--fcin); font-size:11.5px; letter-spacing:.2em; text-transform:uppercase; color:var(--gold-d); text-align:center; }
+.mo-name { font-family:var(--fmoul); font-size:16px; color:var(--txt); text-align:center; line-height:1.7; }
+.mo-url-box { background:var(--gold-p); border:.5px solid var(--gold-l); border-radius:var(--r); padding:12px 14px; }
+.mo-url-label { font-family:var(--fcin); font-size:7px; letter-spacing:.18em; text-transform:uppercase; color:var(--muted); display:block; margin-bottom:5px; }
+.mo-url { font-family:var(--fcor); font-size:12px; color:var(--txt); font-style:italic; word-break:break-all; }
+.mo-actions { display:grid; grid-template-columns:1fr 1fr; gap:8px; }
+.mo-btn { padding:13px; border:none; border-radius:var(--r); font-family:var(--fcin); font-size:8.5px; letter-spacing:.16em; text-transform:uppercase; cursor:pointer; display:flex; align-items:center; justify-content:center; gap:6px; transition:all .15s; }
+.mo-btn.primary { background:var(--gold); color:var(--navy); }
+.mo-btn.secondary { background:var(--gold-p); color:var(--gold-d); border:.5px solid var(--gold); }
+.mo-btn.tg { background:#27A7E7; color:#fff; }
+.mo-btn.wa { background:#25D366; color:#fff; }
+.mo-btn:active { opacity:.8; transform:scale(.98); }
+.mo-close { background:none; border:none; font-family:var(--fcin); font-size:8px; letter-spacing:.13em; text-transform:uppercase; color:var(--muted); cursor:pointer; align-self:center; padding:4px; }
+
+/* Toast */
+.toast { position:fixed; top:16px; left:50%; transform:translateX(-50%) translateY(-80px); background:var(--navy); color:var(--gold-l); font-family:var(--fcin); font-size:9px; letter-spacing:.18em; text-transform:uppercase; padding:10px 20px; border-radius:30px; border:.5px solid rgba(201,168,76,.3); z-index:800; transition:transform .3s ease; white-space:nowrap; }
+.toast.show { transform:translateX(-50%) translateY(0); }
+
+/* FAB */
+.fab { position:fixed; bottom:24px; right:20px; width:52px; height:52px; background:var(--gold); border:none; border-radius:50%; display:flex; align-items:center; justify-content:center; cursor:pointer; box-shadow:0 4px 16px rgba(201,168,76,.35); font-size:22px; transition:background .2s, transform .15s; z-index:200; }
+.fab:active { background:var(--gold-d); transform:scale(.94); }
+.fab-tooltip { position:fixed; bottom:82px; right:14px; font-family:var(--fcin); font-size:7px; letter-spacing:.14em; text-transform:uppercase; background:var(--navy); color:var(--gold-l); padding:6px 12px; border-radius:20px; border:.5px solid rgba(201,168,76,.25); white-space:nowrap; opacity:0; pointer-events:none; transition:opacity .2s; }
+
+/* Animations */
+@keyframes float { 0%,100%{transform:translateY(0)} 50%{transform:translateY(-5px)} }
+@keyframes fadeUp { from{opacity:0;transform:translateY(12px)} to{opacity:1;transform:translateY(0)} }
+
+/* Responsive */
+@media(min-width:600px){
+  body { padding:0 20px; }
+  #dashboard { max-width:560px; margin:0 auto; box-shadow:0 0 60px rgba(0,0,0,.3); }
+}
+</style>
+</head>
+<body>
+
+<!-- ══════════════════ LOGIN ══════════════════ -->
+<div id="loginScreen">
+  <div class="login-lotus" id="loginLotus"></div>
+  <div class="login-title">ការ​ គ្រប់​ គ្រង​ ភ្ញៀវវ</div>
+  <div class="login-sub">Host Dashboard · Phea Sopheak &amp; Bork Theavy</div>
+
+  <div class="login-card">
+    <div>
+      <span class="login-label">Password · លេខ​ សម្ងាត់</span>
+      <input type="password" class="login-input" id="pwIn" placeholder="••••" onkeydown="if(event.key==='Enter')checkPw()">
+    </div>
+    <button class="login-btn" onclick="checkPw()">ចូល​ Dashboard · Sign In</button>
+    <div class="login-err" id="loginErr">❌ &nbsp;Password incorrect. Try again.</div>
+    <div class="login-hint">House Warming · 30 March 2026</div>
+  </div>
+</div>
+
+<!-- ══════════════════ DASHBOARD ══════════════════ -->
+<div id="dashboard">
+
+  <!-- HEADER -->
+  <div class="db-header">
+    <div class="db-header-top">
+      <div class="db-branding">
+        <span class="db-title">Host Dashboard</span>
+        <span class="db-names">ភា សុផាក់ &amp; បក់ ធាវី</span>
+        <span class="db-date">House Warming · Monday 30 March 2026</span>
+      </div>
+      <button class="db-logout" onclick="logout()">Sign Out</button>
+    </div>
+
+    <!-- Stats -->
+    <div class="stat-grid">
+      <div class="stat-card">
+        <span class="stat-val" id="stTotal">0</span>
+        <span class="stat-lbl">ភ្ញៀវវ​ សរុប</span>
+      </div>
+      <div class="stat-card">
+        <span class="stat-val" id="stLinks">0</span>
+        <span class="stat-lbl">តំណ​ ភ្ជាប់</span>
+      </div>
+      <div class="stat-card">
+        <span class="stat-val" id="stShared">0</span>
+        <span class="stat-lbl">បាន​ ចែក​ រំលែក</span>
+      </div>
+    </div>
+
+    <!-- Tabs -->
+    <div class="tabs">
+      <button class="tab on" id="tab0" onclick="switchTab(0)">Guest List</button>
+      <button class="tab" id="tab1" onclick="switchTab(1)">Bulk Add</button>
+      <button class="tab" id="tab2" onclick="switchTab(2)">Export</button>
+    </div>
+  </div>
+
+  <!-- BODY -->
+  <div class="db-body">
+
+    <!-- TAB 0: GUEST LIST -->
+    <div id="tabGuests">
+      <!-- Add single guest -->
+      <div class="add-box">
+        <div class="add-row">
+          <input type="text" class="add-in" id="addIn" placeholder="ឈ្មោះ​ ភ្ញៀវវ... / Guest name..." autocomplete="off">
+          <button class="add-btn" onclick="addGuest()">+</button>
+        </div>
+        <div class="add-hint">Type a name and press + or Enter to add a guest with their personal invite link.</div>
+      </div>
+
+      <!-- Section title -->
+      <div class="section-title">
+        <span>Guest List &nbsp;·&nbsp; បញ្ជី​ ភ្ញៀវវ</span>
+        <span class="section-count" id="guestCount">0 guests</span>
+      </div>
+
+      <!-- Guest items -->
+      <div class="guest-list" id="guestList"></div>
+    </div>
+
+    <!-- TAB 1: BULK ADD -->
+    <div id="tabBulk" style="display:none">
+      <div class="bulk-box">
+        <span class="bulk-label">បញ្ចូល​ ឈ្មោះ​ ច្រើន​ នាក់​ ក្នុង​ ពេល​ តែ​ មួយ</span>
+        <span class="bulk-hint">Add multiple guest names at once — one name per line</span>
+        <textarea class="bulk-ta" id="bulkIn" placeholder="សុខ​ ចន្ទ&#10;ហេង​ សុភា&#10;Kim Sokha&#10;Chan Dara&#10;..."></textarea>
+        <button class="bulk-btn" onclick="bulkAdd()">Add All Guests</button>
+        <div class="add-hint" id="bulkResult"></div>
+      </div>
+    </div>
+
+    <!-- TAB 2: EXPORT -->
+    <div id="tabExport" style="display:none">
+      <div class="bulk-box">
+        <span class="bulk-label">Export &amp; Share Options</span>
+        <span class="bulk-hint">Download your guest list or copy all links at once.</span>
+
+        <div class="export-row">
+          <button class="export-btn" onclick="exportCSV()">
+            <svg width="13" height="13" viewBox="0 0 13 13" fill="none"><rect x="1" y="8" width="11" height="4" rx="1" stroke="currentColor" stroke-width=".95"/><path d="M6.5 1v7M4 4.5l2.5 3 2.5-3" stroke="currentColor" stroke-width="1.1" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            Download CSV
+          </button>
+          <button class="export-btn" onclick="copyAllLinks()">
+            <svg width="13" height="13" viewBox="0 0 13 13" fill="none"><rect x="1" y="3" width="8" height="9" rx="1.5" stroke="currentColor" stroke-width=".95"/><path d="M4 3V2a1 1 0 011-1h5a1 1 0 011 1v8a1 1 0 01-1 1h-1" stroke="currentColor" stroke-width=".95"/></svg>
+            Copy All Links
+          </button>
+        </div>
+
+        <div class="export-row">
+          <button class="export-btn dark" onclick="printList()">
+            <svg width="13" height="13" viewBox="0 0 13 13" fill="none"><rect x="2" y="4" width="9" height="6" rx="1" stroke="currentColor" stroke-width=".9"/><path d="M4 4V2h5v2M4 10v1h5v-1" stroke="currentColor" stroke-width=".9"/><circle cx="9.5" cy="7" r=".9" fill="currentColor" opacity=".7"/></svg>
+            Print Guest List
+          </button>
+        </div>
+
+        <!-- Invite URL setting -->
+        <div style="border-top:.5px solid #E8D08A;padding-top:12px;margin-top:2px">
+          <span class="bulk-label" style="margin-bottom:8px;display:block">Invitation URL (where guests will be sent)</span>
+          <input type="text" class="add-in" id="baseUrlIn" placeholder="https://your-invite.netlify.app/invite.html" style="width:100%;margin-bottom:8px">
+          <button class="bulk-btn" style="padding:10px" onclick="saveBase()">Save URL</button>
+          <div class="add-hint" style="margin-top:6px">Set this to your hosted invitation URL so all guest links are correct.</div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<!-- SHARE MODAL -->
+<div class="mo" id="shareMo" onclick="moOut(event)">
+  <div class="mo-sheet">
+    <div class="mo-bar"></div>
+    <div class="mo-title">Share Invite · ចែក​ រំ​ លែក​ ការ​ អញ្ជើញ</div>
+    <div class="mo-name" id="shareGuestName"></div>
+    <div class="mo-url-box">
+      <span class="mo-url-label">Personalized Link</span>
+      <div class="mo-url" id="shareUrl"></div>
+    </div>
+    <div class="mo-actions">
+      <button class="mo-btn primary" onclick="copyShareUrl()">
+        <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><rect x="1" y="4" width="8" height="9" rx="1.5" stroke="currentColor" stroke-width="1"/><path d="M4 4V3a1 1 0 011-1h6a1 1 0 011 1v8a1 1 0 01-1 1h-1" stroke="currentColor" stroke-width="1"/></svg>
+        Copy Link
+      </button>
+      <button class="mo-btn wa" onclick="shareWA()">
+        💬 WhatsApp
+      </button>
+      <button class="mo-btn tg" onclick="shareTG()">
+        ✈️ Telegram
+      </button>
+      <button class="mo-btn secondary" onclick="shareSMS()">
+        📱 SMS
+      </button>
+    </div>
+    <button class="mo-close" onclick="closeMo()">Close</button>
+  </div>
+</div>
+
+<!-- TOAST -->
+<div class="toast" id="toast"></div>
+
+<script>
+/* ── CONFIG ── */
+const PW = '1234'; // Change this password!
+let BASE_URL = localStorage.getItem('hwBaseUrl') || '';
+const STORE_KEY = 'hwg3'; // same key as invite.html
+
+/* ── STATE ── */
+let guests = [];
+let curTab = 0;
+let shareIdx = -1;
+let sharedSet = new Set(JSON.parse(localStorage.getItem('hwShared') || '[]'));
+
+/* ── LOTUS ── */
+function makeLotus(size) {
+  const r = size / 2;
+  let out = '', inn = '';
+  for (let i = 0; i < 8; i++) {
+    const a = (i / 8) * 360;
+    out += `<path d="M0,0 C-${size*.14},-${size*.22} -${size*.1},-${size*.42} 0,-${size*.5} C${size*.1},-${size*.42} ${size*.14},-${size*.22} 0,0Z" fill="#C9A84C" opacity=".45" transform="rotate(${a})"/>`;
+  }
+  for (let i = 0; i < 8; i++) {
+    const a = (i / 8) * 360 + 22.5;
+    inn += `<path d="M0,0 C-${size*.08},-${size*.14} -${size*.06},-${size*.26} 0,-${size*.32} C${size*.06},-${size*.26} ${size*.08},-${size*.14} 0,0Z" fill="#E8D08A" opacity=".28" transform="rotate(${a})"/>`;
+  }
+  return `<svg width="${size}" height="${size}" viewBox="0 0 ${size} ${size}"><g transform="translate(${r},${r})">${out}${inn}<circle r="${size*.12}" fill="#C9A84C" opacity=".45"/><circle r="${size*.07}" fill="#C9A84C" opacity=".7"/></g></svg>`;
+}
+document.getElementById('loginLotus').innerHTML = makeLotus(72);
+
+/* ── LOGIN ── */
+function checkPw() {
+  const v = document.getElementById('pwIn').value;
+  const err = document.getElementById('loginErr');
+  if (v === PW) {
+    document.getElementById('loginScreen').style.display = 'none';
+    document.getElementById('dashboard').style.display = 'block';
+    loadGuests();
+    renderAll();
+    if (BASE_URL) document.getElementById('baseUrlIn').value = BASE_URL;
+  } else {
+    err.style.display = 'block';
+    document.getElementById('pwIn').value = '';
+    document.getElementById('pwIn').focus();
+    setTimeout(() => err.style.display = 'none', 3000);
+  }
+}
+function logout() {
+  document.getElementById('loginScreen').style.display = 'flex';
+  document.getElementById('dashboard').style.display = 'none';
+  document.getElementById('pwIn').value = '';
+}
+document.getElementById('pwIn').addEventListener('keydown', e => { if (e.key === 'Enter') checkPw(); });
+
+/* ── TABS ── */
+function switchTab(n) {
+  curTab = n;
+  ['tabGuests','tabBulk','tabExport'].forEach((id,i) => document.getElementById(id).style.display = i===n?'flex':'none');
+  document.getElementById('tabGuests').style.flexDirection='column';
+  ['tab0','tab1','tab2'].forEach((id,i) => document.getElementById(id).classList.toggle('on',i===n));
+}
+
+/* ── GUEST DATA ── */
+function loadGuests() {
+  guests = JSON.parse(localStorage.getItem(STORE_KEY) || '[]');
+}
+function saveGuests() {
+  localStorage.setItem(STORE_KEY, JSON.stringify(guests));
+}
+function mkLink(name) {
+  const base = BASE_URL || location.href.replace('dashboard.html','invite.html').split('?')[0];
+  return base + '?guest=' + encodeURIComponent(name);
+}
+
+/* ── ADD GUEST ── */
+function addGuest() {
+  const inp = document.getElementById('addIn');
+  const name = inp.value.trim();
+  if (!name) return;
+  if (!guests.find(g => g.name.toLowerCase() === name.toLowerCase())) {
+    guests.push({ name, ts: Date.now() });
+    saveGuests();
+    renderAll();
+    showToast('✓ Added: ' + name);
+  } else {
+    showToast('Already in list: ' + name);
+  }
+  inp.value = '';
+  inp.focus();
+}
+document.getElementById('addIn').addEventListener('keydown', e => { if (e.key === 'Enter') addGuest(); });
+
+/* ── BULK ADD ── */
+function bulkAdd() {
+  const raw = document.getElementById('bulkIn').value;
+  const names = raw.split('\n').map(n => n.trim()).filter(Boolean);
+  let added = 0, skipped = 0;
+  names.forEach(name => {
+    if (!guests.find(g => g.name.toLowerCase() === name.toLowerCase())) {
+      guests.push({ name, ts: Date.now() });
+      added++;
+    } else skipped++;
+  });
+  saveGuests();
+  renderAll();
+  const res = document.getElementById('bulkResult');
+  res.textContent = `✓ Added ${added} guests.${skipped ? ' Skipped ' + skipped + ' duplicates.' : ''}`;
+  if (added > 0) { document.getElementById('bulkIn').value = ''; showToast(`Added ${added} guests!`); }
+}
+
+/* ── DELETE ── */
+function delGuest(i) {
+  const name = guests[i].name;
+  guests.splice(i, 1);
+  saveGuests();
+  renderAll();
+  showToast('Removed: ' + name);
+}
+
+/* ── COPY LINK ── */
+function copyGuestLink(i, btn) {
+  const url = mkLink(guests[i].name);
+  doCopy(url, () => {
+    btn.textContent = 'Copied ✓';
+    btn.classList.add('done');
+    markShared(guests[i].name);
+    setTimeout(() => { btn.textContent = 'Copy'; btn.classList.remove('done'); }, 2400);
+  });
+}
+
+/* ── SHARE MODAL ── */
+function openShare(i) {
+  shareIdx = i;
+  document.getElementById('shareGuestName').textContent = guests[i].name;
+  document.getElementById('shareUrl').textContent = mkLink(guests[i].name);
+  document.getElementById('shareMo').classList.add('open');
+}
+function closeMo() { document.getElementById('shareMo').classList.remove('open'); }
+function moOut(e) { if (e.target === document.getElementById('shareMo')) closeMo(); }
+
+function copyShareUrl() {
+  const url = mkLink(guests[shareIdx].name);
+  doCopy(url, () => { markShared(guests[shareIdx].name); showToast('Link copied!'); closeMo(); });
+}
+function shareWA() {
+  const url = mkLink(guests[shareIdx].name);
+  const msg = encodeURIComponent('សូម​ អញ្ជើញ​ ចូល​ រួម​ ពិធី​ ប្រារព្ធ​ ឡើង​ គេហ​ ដ្ឋាន​ ថ្មី 🏠\n' + url);
+  markShared(guests[shareIdx].name);
+  window.open('https://wa.me/?text=' + msg, '_blank');
+  closeMo();
+}
+function shareTG() {
+  const url = mkLink(guests[shareIdx].name);
+  const msg = encodeURIComponent('សូម​ អញ្ជើញ​ ចូល​ រួម​ ពិធី​ ប្រារព្ធ​ ឡើង​ គេហ​ ដ្ឋាន​ ថ្មី 🏠\n' + url);
+  markShared(guests[shareIdx].name);
+  window.open('https://t.me/share/url?url=' + encodeURIComponent(mkLink(guests[shareIdx].name)) + '&text=' + msg, '_blank');
+  closeMo();
+}
+function shareSMS() {
+  const url = mkLink(guests[shareIdx].name);
+  markShared(guests[shareIdx].name);
+  window.open('sms:?body=' + encodeURIComponent('ការ​ អញ្ជើញ: ' + url), '_blank');
+  closeMo();
+}
+
+function markShared(name) {
+  sharedSet.add(name);
+  localStorage.setItem('hwShared', JSON.stringify([...sharedSet]));
+  renderAll();
+}
+
+/* ── EXPORT ── */
+function exportCSV() {
+  if (!guests.length) { showToast('No guests to export'); return; }
+  const rows = ['Name,Invite Link,Shared'];
+  guests.forEach(g => rows.push(`"${g.name}","${mkLink(g.name)}","${sharedSet.has(g.name) ? 'Yes' : 'No'}"`));
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(new Blob([rows.join('\n')], { type: 'text/csv' }));
+  a.download = 'guest-list-house-warming.csv';
+  a.click();
+  showToast('CSV downloaded!');
+}
+
+function copyAllLinks() {
+  if (!guests.length) { showToast('No guests yet'); return; }
+  const text = guests.map(g => `${g.name}: ${mkLink(g.name)}`).join('\n');
+  doCopy(text, () => showToast(`Copied ${guests.length} links!`));
+}
+
+function printList() {
+  const win = window.open('', '_blank');
+  win.document.write(`
+    <html><head><title>Guest List</title>
+    <style>body{font-family:sans-serif;padding:24px}table{width:100%;border-collapse:collapse}td,th{border:1px solid #ddd;padding:8px;font-size:13px}th{background:#f5ead0;color:#9A7A2E}tr:nth-child(even){background:#fafafa}</style>
+    </head><body>
+    <h2 style="color:#9A7A2E">Guest List · ភ្ញៀវវ</h2>
+    <p style="color:#888;font-size:12px">House Warming · ភា សុផាក់ &amp; បក់ ធាវី · 30 March 2026</p>
+    <table><tr><th>#</th><th>Name</th><th>Invite Link</th><th>Shared</th></tr>
+    ${guests.map((g,i) => `<tr><td>${i+1}</td><td>${g.name}</td><td style="font-size:11px;color:#666">${mkLink(g.name)}</td><td>${sharedSet.has(g.name)?'✓':''}</td></tr>`).join('')}
+    </table></body></html>`);
+  win.print();
+}
+
+function saveBase() {
+  const v = document.getElementById('baseUrlIn').value.trim();
+  if (!v) return;
+  BASE_URL = v.endsWith('/') ? v + 'invite.html' : v;
+  localStorage.setItem('hwBaseUrl', BASE_URL);
+  showToast('Base URL saved!');
+  renderAll();
+}
+
+/* ── RENDER ── */
+function renderAll() {
+  const shared = [...sharedSet].filter(n => guests.find(g => g.name === n)).length;
+  document.getElementById('stTotal').textContent = guests.length;
+  document.getElementById('stLinks').textContent = guests.length;
+  document.getElementById('stShared').textContent = shared;
+  document.getElementById('guestCount').textContent = guests.length + ' guest' + (guests.length !== 1 ? 's' : '');
+  renderGuests();
+}
+
+function renderGuests() {
+  const gl = document.getElementById('guestList');
+  if (!guests.length) {
+    gl.innerHTML = `<div class="empty"><span class="empty-icon">📋</span><span class="empty-kh">មិន​ ទាន់​ មាន​ ភ្ញៀវវ</span><span class="empty-en">Add guest names above to generate personalized invite links</span></div>`;
+    return;
+  }
+  gl.innerHTML = guests.map((g, i) => {
+    const ini = g.name.trim().split(/\s+/).map(w => w[0]||'').join('').toUpperCase().slice(0,2) || '?';
+    const url = mkLink(g.name);
+    const short = url.length > 36 ? url.slice(0, 36) + '…' : url;
+    const isShared = sharedSet.has(g.name);
+    return `
+    <div class="gi">
+      <div class="gi-main">
+        <div class="gi-av">${ini}</div>
+        <div class="gi-info">
+          <span class="gi-name">${g.name}</span>
+          <span class="gi-meta">${isShared ? '✓ Shared' : 'Not shared yet'}</span>
+        </div>
+        <div class="gi-actions">
+          <button class="gi-share" onclick="openShare(${i})">Share</button>
+          <button class="gi-del" onclick="delGuest(${i})" title="Remove">✕</button>
+        </div>
+      </div>
+      <div class="gi-link-row">
+        <span class="gi-url" title="${url}">${short}</span>
+        <button class="gi-copy" id="cp${i}" onclick="copyGuestLink(${i},this)">Copy</button>
+      </div>
+    </div>`;
+  }).join('');
+}
+
+/* ── HELPERS ── */
+function doCopy(text, cb) {
+  if (navigator.clipboard) navigator.clipboard.writeText(text).then(cb).catch(() => { fbCopy(text); cb(); });
+  else { fbCopy(text); cb(); }
+}
+function fbCopy(t) { const ta = document.createElement('textarea'); ta.value = t; document.body.appendChild(ta); ta.select(); document.execCommand('copy'); document.body.removeChild(ta); }
+
+function showToast(msg) {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.classList.add('show');
+  setTimeout(() => t.classList.remove('show'), 2500);
+}
+
+/* ── INIT ── */
+// Auto-login if session stored
+if (sessionStorage.getItem('hwAuth') === PW) {
+  document.getElementById('loginScreen').style.display = 'none';
+  document.getElementById('dashboard').style.display = 'block';
+  loadGuests(); renderAll();
+  if (BASE_URL) document.getElementById('baseUrlIn').value = BASE_URL;
+}
+document.getElementById('pwIn').focus();
+
+// Store session on login
+const origCheckPw = checkPw;
+window.checkPw = function() {
+  const v = document.getElementById('pwIn').value;
+  if (v === PW) sessionStorage.setItem('hwAuth', PW);
+  origCheckPw();
+};
+</script>
+</body>
+</html>

@@ -1,0 +1,1278 @@
+<!DOCTYPE html>
+<html lang="km">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>ពិធីប្រារព្ធឡើងគេហដ្ឋានថ្មី</title>
+<link href="https://fonts.googleapis.com/css2?family=Moul&family=Battambang:wght@400;700&family=Cormorant+Garamond:ital,wght@0,400;0,600;1,400&family=Cinzel:wght@400;600&family=Great+Vibes&display=swap" rel="stylesheet">
+<style>
+/* ── TOKENS ── */
+:root {
+  --navy: #0D1B3E;
+  --navy2: #162448;
+  --navy3: #1F3060;
+  --gold: #C9A84C;
+  --gold-l: #E8D08A;
+  --gold-p: #F5EAC8;
+  --gold-d: #9A7A2E;
+  --gold-deep: #705814;
+  --ivory: #FFFDF5;
+  --cream: #FAF5E4;
+  --brown: #4A3010;
+  --txt: #2C1F06;
+  --muted: #7A6030;
+  --red: #8B1A2A;
+  --fmoul: 'Moul', 'Khmer OS Moul Light', serif;
+  --fbatt: 'Battambang', 'Khmer OS', sans-serif;
+  --fgv: 'Great Vibes', cursive;
+  --fcin: 'Cinzel', serif;
+  --fcor: 'Cormorant Garamond', Georgia, serif;
+}
+*,*::before,*::after { box-sizing: border-box; margin: 0; padding: 0; }
+html, body { height: 100%; background: #070e1f; overflow: hidden; touch-action: none; }
+
+/* ── APP SHELL ── */
+#app {
+  position: relative;
+  width: 100%;
+  max-width: 430px;
+  height: 100dvh;
+  margin: 0 auto;
+  overflow: hidden;
+  background: var(--navy);
+}
+
+/* ── SWIPE TRACK ── */
+#track {
+  display: flex;
+  height: 100%;
+  width: 100%;
+  transition: transform 0.48s cubic-bezier(0.4, 0, 0.2, 1);
+  will-change: transform;
+}
+.pg {
+  min-width: 100%;
+  height: 100%;
+  overflow-y: auto;
+  overflow-x: hidden;
+  -webkit-overflow-scrolling: touch;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+.pg.dark { background: var(--navy); }
+.pg.light { background: var(--ivory); }
+.pg.cream-bg { background: var(--cream); }
+
+/* ── DOT INDICATORS ── */
+#dots {
+  position: fixed;
+  bottom: 18px;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  gap: 7px;
+  z-index: 300;
+}
+.dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: rgba(201,168,76,0.28);
+  border: 0.5px solid rgba(201,168,76,0.5);
+  transition: all 0.3s ease;
+  cursor: pointer;
+}
+.dot.on {
+  background: var(--gold);
+  width: 20px;
+  border-radius: 3px;
+  border-color: var(--gold);
+}
+
+/* ── LANG FLAG ── */
+#langBtn {
+  position: fixed;
+  top: 13px;
+  right: 13px;
+  z-index: 400;
+  background: rgba(255,253,245,0.12);
+  border: 0.5px solid rgba(201,168,76,0.4);
+  border-radius: 30px;
+  padding: 5px 10px 5px 7px;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  cursor: pointer;
+  backdrop-filter: blur(6px);
+  transition: background 0.2s;
+}
+#langBtn:active { background: rgba(201,168,76,0.2); }
+#langBtn .fl { font-size: 15px; line-height: 1; }
+#langBtn .fn { font-family: var(--fcin); font-size: 7px; letter-spacing: .13em; text-transform: uppercase; color: var(--gold-l); }
+
+/* ── ANIMATIONS ── */
+@keyframes fadeUp { from { opacity: 0; transform: translateY(16px); } to { opacity: 1; transform: translateY(0); } }
+@keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+@keyframes pulse { 0%,100% { opacity: .35; } 50% { opacity: 1; } }
+@keyframes spin { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
+@keyframes float { 0%,100% { transform: translateY(0); } 50% { transform: translateY(-6px); } }
+@keyframes shimmer {
+  0% { background-position: -200% center; }
+  100% { background-position: 200% center; }
+}
+
+/* ── ANIMATED GOLD TEXT ── */
+.shimmer-text {
+  background: linear-gradient(90deg, var(--gold-d) 20%, var(--gold-l) 50%, var(--gold) 60%, var(--gold-d) 80%);
+  background-size: 200% auto;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  animation: shimmer 3.5s linear infinite;
+}
+
+/* ══════════════════════════════════════
+   PAGE 0 · COVER
+══════════════════════════════════════ */
+#p0 { justify-content: center; padding: 0; }
+.p0-bg {
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(ellipse at 50% 35%, #1E3070 0%, var(--navy) 65%);
+}
+.p0-stars {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+}
+.p0-content {
+  position: relative;
+  z-index: 2;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  padding: 50px 28px 90px;
+  gap: 0;
+  width: 100%;
+}
+.cover-top-ornament { margin-bottom: 12px; animation: fadeIn 1s .1s both; }
+.cover-khtitle {
+  font-family: var(--fmoul);
+  font-size: 16px;
+  color: var(--gold);
+  line-height: 1.8;
+  animation: fadeUp .9s .2s both;
+}
+.cover-entitle {
+  font-family: var(--fgv);
+  font-size: 48px;
+  line-height: 1.05;
+  animation: fadeUp .9s .25s both;
+}
+.cover-divider { margin: 16px auto; animation: fadeIn .9s .35s both; }
+.cover-lotus { animation: float 4s 1s ease-in-out infinite, fadeIn .9s .4s both; }
+.cover-divider2 { margin: 14px auto; animation: fadeIn .9s .5s both; }
+.cover-namekh {
+  font-family: var(--fmoul);
+  font-size: 16px;
+  color: var(--gold-l);
+  line-height: 1.8;
+  animation: fadeUp .9s .55s both;
+}
+.cover-nameen {
+  font-family: var(--fgv);
+  font-size: 36px;
+  color: var(--gold-l);
+  line-height: 1.2;
+  animation: fadeUp .9s .6s both;
+}
+.cover-tap {
+  margin-top: 28px;
+  font-family: var(--fcin);
+  font-size: 8.5px;
+  letter-spacing: .28em;
+  text-transform: uppercase;
+  animation: pulse 2.2s 1.2s infinite, fadeIn .9s .9s both;
+}
+.cover-tapkh {
+  margin-top: 5px;
+  font-family: var(--fbatt);
+  font-size: 12px;
+  color: rgba(201,168,76,.45);
+  animation: pulse 2.2s 1.4s infinite, fadeIn .9s 1s both;
+}
+.cover-swipe-hint {
+  position: absolute;
+  bottom: 42px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  animation: fadeIn 1s 1.5s both;
+}
+.swipe-arrows { display: flex; align-items: center; gap: 8px; }
+.swipe-arrows span {
+  font-size: 18px;
+  color: rgba(201,168,76,.4);
+  animation: pulse 1.8s infinite;
+}
+.swipe-arrows span:nth-child(2) { animation-delay: .15s; color: rgba(201,168,76,.6); }
+.swipe-arrows span:nth-child(3) { animation-delay: .3s; color: rgba(201,168,76,.4); }
+.swipe-label {
+  font-family: var(--fcin);
+  font-size: 7px;
+  letter-spacing: .2em;
+  text-transform: uppercase;
+  color: rgba(201,168,76,.4);
+}
+.host-tiny {
+  position: absolute;
+  bottom: 16px;
+  right: 14px;
+  font-family: var(--fcin);
+  font-size: 7px;
+  letter-spacing: .1em;
+  color: rgba(201,168,76,.2);
+  background: none;
+  border: .5px solid rgba(201,168,76,.12);
+  padding: 4px 10px;
+  border-radius: 20px;
+  cursor: pointer;
+  transition: all .2s;
+}
+.host-tiny:active { color: var(--gold-d); border-color: var(--gold-d); }
+
+/* ══════════════════════════════════════
+   PAGE 1 · WELCOME
+══════════════════════════════════════ */
+#p1 { justify-content: flex-start; padding: 0; }
+.p1-top {
+  width: 100%;
+  padding: 40px 28px 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+}
+.p1-lotus { margin-bottom: 16px; animation: float 4s ease-in-out infinite; }
+.p1-tag {
+  font-family: var(--fcin);
+  font-size: 7.5px;
+  letter-spacing: .28em;
+  text-transform: uppercase;
+  color: var(--gold-d);
+  margin-bottom: 6px;
+}
+.p1-khtitle {
+  font-family: var(--fmoul);
+  font-size: 16px;
+  color: var(--gold);
+  line-height: 1.75;
+  margin-bottom: 2px;
+}
+.p1-entitle { font-family: var(--fgv); font-size: 52px; color: var(--gold); line-height: 1; }
+.p1-divider { margin: 14px auto; }
+.p1-greeting-kh { font-family: var(--fmoul); font-size: 16px; color: var(--brown); line-height: 1.7; }
+.p1-greeting-en { font-family: var(--fcor); font-size: 16px; font-style: italic; color: var(--muted); }
+.p1-names { margin-top: 18px; text-align: center; }
+.p1-namekh { font-family: var(--fmoul); font-size: 16px; color: var(--gold-d); line-height: 1.8; }
+.p1-nameen { font-family: var(--fgv); font-size: 36px; color: var(--gold); line-height: 1.25; }
+.guest-pill {
+  display: none;
+  margin-top: 18px;
+  background: var(--gold-p);
+  border: .5px solid var(--gold);
+  border-radius: 30px;
+  padding: 10px 20px;
+  text-align: center;
+}
+.gp-kh { font-family: var(--fbatt); font-size: 14px; color: var(--brown); }
+.gp-en { font-family: var(--fcor); font-size: 14px; font-style: italic; color: var(--muted); }
+.gp-name { font-family: var(--fmoul); font-size: 15px; color: var(--gold-d); }
+.p1-bottom {
+  width: 100%;
+  margin-top: auto;
+  padding-bottom: 46px;
+}
+.kbach-bottom { width: 100%; overflow: hidden; }
+
+/* ══════════════════════════════════════
+   PAGE 2 · INVITATION
+══════════════════════════════════════ */
+#p2 { justify-content: flex-start; padding: 0; }
+.p2-inner {
+  width: 100%;
+  padding: 38px 26px 56px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 14px;
+  text-align: center;
+  min-height: 100%;
+}
+.p2-corner { position: absolute; width: 70px; height: 70px; }
+.p2-tl { top: 4px; left: 4px; }
+.p2-tr { top: 4px; right: 4px; transform: scaleX(-1); }
+.p2-bl { bottom: 44px; left: 4px; transform: scaleY(-1); }
+.p2-br { bottom: 44px; right: 4px; transform: scale(-1); }
+.inv-khtit { font-family: var(--fmoul); font-size: 16px; color: var(--gold); line-height: 1.75; }
+.inv-entit { font-family: var(--fgv); font-size: 36px; color: var(--gold); line-height: 1; }
+.inv-sep { display: flex; align-items: center; gap: 9px; width: 65%; margin: 2px auto; }
+.inv-sep::before,.inv-sep::after { content: ''; flex: 1; height: .5px; background: var(--gold); opacity: .35; }
+.inv-bodykh { font-family: var(--fbatt); font-size: 14px; color: var(--txt); line-height: 2.15; }
+.inv-bodyen { font-family: var(--fcor); font-size: 14.5px; font-style: italic; color: var(--txt); line-height: 2; }
+.inv-highlight { font-family: var(--fmoul); font-size: 16px; color: var(--gold-d); }
+.inv-highlighten { font-family: var(--fcin); font-size: 11px; letter-spacing: .12em; color: var(--gold-d); }
+.inv-namekh { font-family: var(--fmoul); font-size: 16px; color: var(--gold-d); line-height: 1.8; }
+.inv-nameen { font-family: var(--fgv); font-size: 36px; color: var(--gold); line-height: 1.2; }
+.inv-datekh { font-family: var(--fbatt); font-size: 14px; color: var(--txt); line-height: 2.2; }
+.inv-dateen { font-family: var(--fcor); font-size: 14px; font-style: italic; color: var(--txt); line-height: 2; }
+.inv-addrkh { font-family: var(--fbatt); font-size: 13px; color: var(--muted); line-height: 2; }
+.inv-addren { font-family: var(--fcor); font-size: 12.5px; font-style: italic; color: var(--muted); line-height: 1.9; }
+.inv-telkh { font-family: var(--fbatt); font-size: 13px; color: var(--muted); }
+.inv-telen { font-family: var(--fcor); font-size: 13px; font-style: italic; color: var(--muted); }
+.tel-strong { color: var(--gold-d); font-weight: 700; }
+
+/* ══════════════════════════════════════
+   PAGE 3 · DETAILS
+══════════════════════════════════════ */
+#p3 { justify-content: flex-start; padding: 0; }
+.p3-inner {
+  width: 100%;
+  padding: 36px 18px 60px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+.p3-hd { text-align: center; margin-bottom: 4px; }
+.p3-kh { font-family: var(--fmoul); font-size: 16px; color: var(--gold); line-height: 1.7; }
+.p3-en { font-family: var(--fcin); font-size: 8px; letter-spacing: .24em; text-transform: uppercase; color: var(--gold-d); }
+.det-card {
+  background: #fff;
+  border: .5px solid #E8D08A;
+  border-radius: 14px;
+  padding: 16px;
+  display: flex;
+  gap: 13px;
+  align-items: flex-start;
+  position: relative;
+  overflow: hidden;
+}
+.det-card::before {
+  content: '';
+  position: absolute;
+  left: 0; top: 0; bottom: 0;
+  width: 3px;
+  background: linear-gradient(to bottom, var(--gold), var(--gold-l));
+  border-radius: 14px 0 0 14px;
+}
+.dico {
+  width: 38px; height: 38px; min-width: 38px;
+  background: var(--gold-p);
+  border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+}
+.dbody { flex: 1; }
+.d-lkh { font-family: var(--fbatt); font-size: 12px; color: var(--muted); display: block; margin-bottom: 2px; }
+.d-len { font-family: var(--fcin); font-size: 7px; letter-spacing: .18em; text-transform: uppercase; color: #D4B560; display: block; margin-bottom: 3px; }
+.d-vkh { font-family: var(--fmoul); font-size: 15px; color: var(--txt); display: block; line-height: 1.7; }
+.d-ven { font-family: var(--fcor); font-size: 17px; font-weight: 600; color: var(--txt); display: block; line-height: 1.45; }
+.d-subkh { font-family: var(--fbatt); font-size: 13px; color: var(--muted); display: block; margin-top: 3px; line-height: 1.8; }
+.d-suben { font-family: var(--fcor); font-size: 12.5px; font-style: italic; color: var(--muted); display: block; line-height: 1.7; }
+.date-pill {
+  background: linear-gradient(135deg, var(--navy) 0%, var(--navy3) 100%);
+  border-radius: 14px;
+  padding: 16px;
+  display: grid;
+  grid-template-columns: 1fr 1px 1fr 1px 1fr;
+  gap: 0;
+  align-items: center;
+  border: .5px solid rgba(201,168,76,.3);
+}
+.dp-divider { height: 36px; background: rgba(201,168,76,.25); }
+.dp-cell { text-align: center; padding: 0 4px; }
+.dp-label { font-family: var(--fcin); font-size: 6.5px; letter-spacing: .16em; text-transform: uppercase; color: rgba(201,168,76,.55); display: block; margin-bottom: 4px; }
+.dp-vkh { font-family: var(--fmoul); font-size: 14px; color: var(--gold); display: block; line-height: 1.5; }
+.dp-ven { font-family: var(--fcin); font-size: 13px; color: var(--gold); display: block; }
+.dp-big { font-family: var(--fcin); font-size: 28px; font-weight: 600; color: var(--gold); display: block; line-height: 1; }
+.dp-sub { font-family: var(--fcin); font-size: 7.5px; letter-spacing: .1em; color: var(--gold-l); display: block; margin-top: 3px; }
+.map-btn {
+  display: flex; align-items: center; justify-content: center; gap: 8px;
+  background: linear-gradient(135deg, var(--navy) 0%, var(--navy3) 100%);
+  border: .5px solid rgba(201,168,76,.35);
+  border-radius: 14px; padding: 13px;
+  text-decoration: none;
+  transition: border-color .2s;
+}
+.map-btn:active { border-color: var(--gold); }
+.map-btn-kh { font-family: var(--fbatt); font-size: 14px; color: var(--gold-l); }
+.map-btn-en { font-family: var(--fcin); font-size: 8px; letter-spacing: .15em; text-transform: uppercase; color: var(--gold-d); }
+.hosts-row { display: flex; gap: 10px; }
+.hcard {
+  flex: 1;
+  background: #fff;
+  border: .5px solid #E8D08A;
+  border-radius: 14px;
+  padding: 13px;
+  text-align: center;
+}
+.hrole { font-family: var(--fcin); font-size: 6.5px; letter-spacing: .16em; text-transform: uppercase; color: var(--muted); display: block; margin-bottom: 5px; }
+.hnkh { font-family: var(--fmoul); font-size: 15px; color: var(--gold-d); display: block; line-height: 1.55; }
+.hnen { font-family: var(--fcor); font-size: 12px; font-style: italic; color: var(--muted); display: block; }
+.tel-card {
+  background: var(--gold-p);
+  border: .5px solid #E8D08A;
+  border-radius: 14px;
+  padding: 14px;
+  text-align: center;
+}
+.tel-hkh { font-family: var(--fbatt); font-size: 13px; color: var(--muted); display: block; margin-bottom: 6px; }
+.tel-hen { font-family: var(--fcin); font-size: 7.5px; letter-spacing: .18em; text-transform: uppercase; color: var(--muted); display: block; margin-bottom: 6px; }
+.tel-n { font-family: var(--fmoul); font-size: 15px; color: var(--gold-d); display: block; line-height: 1.8; }
+
+/* ══════════════════════════════════════
+   PAGE 4 · CLOSING
+══════════════════════════════════════ */
+#p4 { justify-content: center; padding: 30px 28px 60px; }
+.p4-bg {
+  position: absolute; inset: 0;
+  background: radial-gradient(ellipse at 50% 60%, #1E3070 0%, var(--navy) 65%);
+}
+.p4-content {
+  position: relative; z-index: 2;
+  display: flex; flex-direction: column;
+  align-items: center; text-align: center;
+  gap: 0; width: 100%;
+}
+.p4-lotus { margin-bottom: 18px; animation: float 4s ease-in-out infinite; }
+.p4-khtitle { font-family: var(--fmoul); font-size: 16px; color: var(--gold); line-height: 1.8; margin-bottom: 2px; }
+.p4-entitle { font-family: var(--fgv); font-size: 48px; color: var(--gold); line-height: 1; }
+.p4-divider { margin: 14px auto; }
+.p4-bodykh { font-family: var(--fbatt); font-size: 14px; color: rgba(255,253,245,.75); line-height: 2.1; }
+.p4-bodyen { font-family: var(--fcor); font-size: 14px; font-style: italic; color: rgba(255,253,245,.65); line-height: 1.9; }
+.p4-tel {
+  margin-top: 20px;
+  background: rgba(255,253,245,.07);
+  border: .5px solid rgba(201,168,76,.3);
+  border-radius: 14px;
+  padding: 14px 20px;
+  width: 100%;
+}
+.p4-tel-label { font-family: var(--fcin); font-size: 7px; letter-spacing: .2em; text-transform: uppercase; color: rgba(201,168,76,.55); display: block; margin-bottom: 7px; }
+.p4-num { font-family: var(--fmoul); font-size: 15px; color: var(--gold-l); display: block; line-height: 1.8; }
+.p4-bottom-ornament { margin-top: 22px; }
+
+/* ══════════════════════════════════════
+   DASHBOARD
+══════════════════════════════════════ */
+#dash {
+  position: fixed; inset: 0; z-index: 500;
+  background: var(--ivory);
+  display: flex; flex-direction: column;
+  transform: translateY(100%);
+  transition: transform .45s cubic-bezier(.4,0,.2,1);
+  max-width: 430px; margin: 0 auto;
+  left: 50%; transform: translateX(-50%) translateY(100%);
+}
+#dash.open { transform: translateX(-50%) translateY(0); }
+.dash-top {
+  background: var(--navy);
+  padding: 18px 16px 16px;
+  display: flex; align-items: center; justify-content: space-between;
+  flex-shrink: 0;
+}
+.dash-title { font-family: var(--fcin); font-size: 13px; letter-spacing: .16em; color: var(--gold); }
+.dash-sub { font-family: var(--fbatt); font-size: 12px; color: rgba(201,168,76,.5); margin-top: 1px; }
+.dash-close {
+  font-family: var(--fcin); font-size: 8px; letter-spacing: .12em;
+  color: rgba(201,168,76,.55); background: none;
+  border: .5px solid rgba(201,168,76,.25); padding: 6px 12px;
+  border-radius: 20px; cursor: pointer; transition: all .2s;
+}
+.dash-close:active { color: var(--gold); border-color: var(--gold); }
+.dash-body {
+  flex: 1; overflow-y: auto; padding: 16px 15px 80px;
+  display: flex; flex-direction: column; gap: 13px;
+}
+.dash-stat-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 9px; }
+.dsc { background: #fff; border: .5px solid #E8D08A; border-radius: 12px; padding: 12px; text-align: center; }
+.dsv { font-family: var(--fcin); font-size: 26px; font-weight: 600; color: var(--gold); display: block; }
+.dslkh { font-family: var(--fbatt); font-size: 12px; color: var(--muted); display: block; }
+.dstit {
+  font-family: var(--fcin); font-size: 7.5px; letter-spacing: .22em;
+  text-transform: uppercase; color: var(--gold-d);
+  padding-bottom: 7px; border-bottom: .5px solid #E8D08A;
+}
+.add-row { display: flex; gap: 8px; }
+.add-in {
+  flex: 1; padding: 10px 13px;
+  background: #fff; border: .5px solid #E8D08A;
+  border-radius: 12px; font-family: var(--fbatt);
+  font-size: 14px; color: var(--txt); outline: none;
+  transition: border-color .2s;
+}
+.add-in:focus { border-color: var(--gold); }
+.add-in::placeholder { font-family: var(--fcor); font-style: italic; color: #D4B560; }
+.add-btn {
+  padding: 10px 15px; background: var(--gold);
+  border: none; border-radius: 12px; color: var(--ivory);
+  font-size: 20px; cursor: pointer; line-height: 1;
+  transition: background .15s;
+}
+.add-btn:active { background: var(--gold-d); }
+.gl { display: flex; flex-direction: column; gap: 8px; }
+.gi { background: #fff; border: .5px solid #E8D08A; border-radius: 12px; overflow: hidden; }
+.gi-top { display: flex; align-items: center; gap: 10px; padding: 11px 13px; }
+.gav {
+  width: 34px; height: 34px; min-width: 34px;
+  border-radius: 50%; background: var(--gold-p);
+  display: flex; align-items: center; justify-content: center;
+  font-family: var(--fcin); font-size: 11px; color: var(--gold-d); font-weight: 600;
+}
+.ginfo { flex: 1; min-width: 0; }
+.gn { font-family: var(--fbatt); font-size: 14px; color: var(--txt); display: block; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.gnote { font-family: var(--fcin); font-size: 6.5px; letter-spacing: .1em; text-transform: uppercase; color: var(--muted); }
+.gdel { background: none; border: none; color: #D4B560; cursor: pointer; font-size: 15px; padding: 4px; transition: color .2s; }
+.gdel:active { color: #c0392b; }
+.gi-link { border-top: .5px solid var(--gold-p); background: var(--gold-p); padding: 8px 13px; display: flex; align-items: center; gap: 8px; }
+.glurl { flex: 1; font-family: var(--fcor); font-size: 10.5px; color: var(--brown); font-style: italic; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.gcpy {
+  font-family: var(--fcin); font-size: 7px; letter-spacing: .12em;
+  text-transform: uppercase; color: var(--gold-d);
+  background: #fff; border: .5px solid var(--gold);
+  border-radius: 20px; padding: 5px 10px; cursor: pointer;
+  white-space: nowrap; transition: all .2s;
+}
+.gcpy:active { background: var(--gold-l); }
+.gcpy.done { background: var(--gold); color: var(--ivory); border-color: var(--gold); }
+.gl-empty { text-align: center; font-family: var(--fcor); font-size: 14px; font-style: italic; color: var(--muted); padding: 24px 0; }
+.exp-btn {
+  display: flex; align-items: center; justify-content: center; gap: 8px;
+  font-family: var(--fcin); font-size: 7.5px; letter-spacing: .15em;
+  text-transform: uppercase; color: var(--gold-d);
+  background: var(--gold-p); border: .5px solid var(--gold);
+  border-radius: 30px; padding: 12px; cursor: pointer;
+  transition: background .2s;
+}
+.exp-btn:active { background: var(--gold-l); }
+
+/* ══════════════════════════════════════
+   MODAL
+══════════════════════════════════════ */
+.mo {
+  position: fixed; inset: 0; background: rgba(0,0,0,.6); z-index: 600;
+  display: flex; align-items: flex-end; justify-content: center;
+  opacity: 0; pointer-events: none; transition: opacity .28s;
+}
+.mo.open { opacity: 1; pointer-events: all; }
+.ms {
+  width: 100%; max-width: 430px;
+  background: var(--ivory); border-radius: 20px 20px 0 0;
+  padding: 22px 22px 40px;
+  transform: translateY(100%);
+  transition: transform .36s cubic-bezier(.4,0,.2,1);
+  display: flex; flex-direction: column; gap: 14px;
+}
+.mo.open .ms { transform: translateY(0); }
+.mbar { width: 36px; height: 4px; background: var(--gold-l); border-radius: 2px; margin: -6px auto 4px; }
+.mt { font-family: var(--fcin); font-size: 12px; letter-spacing: .2em; text-transform: uppercase; color: var(--gold-d); text-align: center; }
+.mhint { font-family: var(--fbatt); font-size: 13px; color: var(--muted); text-align: center; }
+.mpw {
+  width: 100%; padding: 13px;
+  background: #fff; border: .5px solid #E8D08A; border-radius: 12px;
+  font-family: var(--fcor); font-size: 20px; color: var(--txt);
+  outline: none; text-align: center; letter-spacing: .35em;
+  transition: border-color .2s;
+}
+.mpw:focus { border-color: var(--gold); }
+.mok {
+  width: 100%; padding: 14px; background: var(--gold);
+  border: none; border-radius: 30px;
+  font-family: var(--fcin); font-size: 9.5px; letter-spacing: .2em;
+  text-transform: uppercase; color: var(--ivory); cursor: pointer;
+}
+.mok:active { background: var(--gold-d); }
+.mcnl { background: none; border: none; font-family: var(--fcin); font-size: 8px; letter-spacing: .13em; text-transform: uppercase; color: var(--muted); cursor: pointer; align-self: center; padding: 4px; }
+
+/* HELPERS */
+.lk { } .le { display: none; }
+</style>
+</head>
+<body>
+<div id="app">
+<div id="track">
+
+<!-- ══════════ PAGE 0 · COVER ══════════ -->
+<div class="pg dark" id="p0">
+  <div class="p0-bg"></div>
+  <canvas id="starCanvas" style="position:absolute;inset:0;width:100%;height:100%;opacity:.5;pointer-events:none"></canvas>
+
+  <div class="p0-content">
+    <!-- Top ornament -->
+    <div class="cover-top-ornament">
+      <svg width="240" height="32" viewBox="0 0 240 32">
+        <line x1="0" y1="16" x2="85" y2="16" stroke="#C9A84C" stroke-width=".5" opacity=".4"/>
+        <line x1="155" y1="16" x2="240" y2="16" stroke="#C9A84C" stroke-width=".5" opacity=".4"/>
+        <g transform="translate(120,16)">
+          <circle cx="0" cy="0" r="3" fill="#C9A84C" opacity=".7"/>
+          <circle cx="-14" cy="0" r="1.5" fill="#C9A84C" opacity=".4"/>
+          <circle cx="14" cy="0" r="1.5" fill="#C9A84C" opacity=".4"/>
+          <circle cx="-26" cy="0" r="1" fill="#C9A84C" opacity=".3"/>
+          <circle cx="26" cy="0" r="1" fill="#C9A84C" opacity=".3"/>
+          <!-- small lotus buds -->
+          <path d="M-85,0 C-82,-5 -78,-5 -75,0 C-78,5 -82,5 -85,0Z" fill="#C9A84C" opacity=".3"/>
+          <path d="M75,0 C78,-5 82,-5 85,0 C82,5 78,5 75,0Z" fill="#C9A84C" opacity=".3"/>
+          <path d="M-95,0 C-93,-3 -91,-3 -89,0 C-91,3 -93,3 -95,0Z" fill="#C9A84C" opacity=".2"/>
+          <path d="M89,0 C91,-3 93,-3 95,0 C93,3 91,3 89,0Z" fill="#C9A84C" opacity=".2"/>
+        </g>
+      </svg>
+    </div>
+
+    <!-- Khmer title -->
+    <div class="cover-khtitle shimmer-text lk">ពិធីប្រារព្ធ​ ឡើង​ គេហដ្ឋាន​ ថ្មី</div>
+    <div class="cover-entitle shimmer-text le">House Warming Party</div>
+
+    <!-- Gold divider -->
+    <div class="cover-divider">
+      <svg width="180" height="14" viewBox="0 0 180 14">
+        <line x1="0" y1="7" x2="70" y2="7" stroke="#C9A84C" stroke-width=".5" opacity=".4"/>
+        <line x1="110" y1="7" x2="180" y2="7" stroke="#C9A84C" stroke-width=".5" opacity=".4"/>
+        <path d="M90,7 m-20,0 a20,6 0 1,0 40,0 a20,6 0 1,0 -40,0" fill="none" stroke="#C9A84C" stroke-width=".6" opacity=".5"/>
+        <circle cx="90" cy="7" r="2.5" fill="#C9A84C" opacity=".7"/>
+      </svg>
+    </div>
+
+    <!-- Big lotus -->
+    <div class="cover-lotus" id="coverLotus"></div>
+
+    <div class="cover-divider2">
+      <svg width="120" height="8" viewBox="0 0 120 8">
+        <line x1="0" y1="4" x2="46" y2="4" stroke="#C9A84C" stroke-width=".5" opacity=".3"/>
+        <line x1="74" y1="4" x2="120" y2="4" stroke="#C9A84C" stroke-width=".5" opacity=".3"/>
+        <circle cx="60" cy="4" r="2" fill="#C9A84C" opacity=".5"/>
+        <circle cx="54" cy="4" r="1.2" fill="#C9A84C" opacity=".3"/>
+        <circle cx="66" cy="4" r="1.2" fill="#C9A84C" opacity=".3"/>
+      </svg>
+    </div>
+
+    <!-- Names -->
+    <div class="cover-namekh lk">ភា សុផាក់ &amp; បក់ ធាវី</div>
+    <div class="cover-nameen le">Phea Sopheak &amp; Bork Theavy</div>
+
+    <!-- Tap hint -->
+    <div class="cover-tap" style="color:var(--gold-l)">Swipe to Begin</div>
+    <div class="cover-tapkh lk">អូស​ ដៃ​ ដើម្បី​ ចាប់​ ផ្ដើម</div>
+    <div class="cover-tapkh le" style="display:none;font-family:var(--fcor);font-size:12px;font-style:italic;color:rgba(232,208,138,.45)">Slide to explore</div>
+  </div>
+
+  <div class="cover-swipe-hint">
+    <div class="swipe-arrows">
+      <span>›</span><span>›</span><span>›</span>
+    </div>
+    <div class="swipe-label lk">អូស​ ទៅ​ ស្ដាំ</div>
+    <div class="swipe-label le" style="display:none">Swipe right</div>
+  </div>
+
+  <!-- Bottom kbach ornament -->
+  <div style="position:absolute;bottom:0;left:0;right:0;overflow:hidden;height:28px" id="p0kbach"></div>
+
+  <button class="host-tiny" onclick="showLogin()">⚙</button>
+</div>
+
+<!-- ══════════ PAGE 1 · WELCOME ══════════ -->
+<div class="pg light" id="p1">
+  <!-- Top kbach pattern -->
+  <div style="width:100%;overflow:hidden;height:28px;flex-shrink:0" id="p1kbachTop"></div>
+
+  <div class="p1-top" style="flex:1">
+    <div class="p1-lotus" id="p1Lotus"></div>
+    <div class="p1-tag">House Warming Party · 2026</div>
+    <div class="p1-khtitle lk">ពិធីប្រារព្ធ​ ឡើង​ គេហដ្ឋាន​ ថ្មី</div>
+    <div class="p1-entitle le" style="display:none">Welcome</div>
+
+    <div class="p1-divider">
+      <svg width="160" height="12" viewBox="0 0 160 12">
+        <line x1="0" y1="6" x2="60" y2="6" stroke="#C9A84C" stroke-width=".5" opacity=".38"/>
+        <line x1="100" y1="6" x2="160" y2="6" stroke="#C9A84C" stroke-width=".5" opacity=".38"/>
+        <path d="M80,6 m-18,0 a18,5 0 1,0 36,0 a18,5 0 1,0 -36,0" fill="none" stroke="#C9A84C" stroke-width=".5" opacity=".45"/>
+        <circle cx="80" cy="6" r="2" fill="#C9A84C" opacity=".6"/>
+      </svg>
+    </div>
+
+    <div class="p1-greeting-kh lk">សូម​ ស្វា​គមន៍!</div>
+    <div class="p1-greeting-en le" style="display:none">You are cordially invited</div>
+
+    <div class="p1-names" style="width:100%">
+      <div class="p1-namekh lk">ភា សុផាក់ &amp; បក់ ធាវី</div>
+      <div class="p1-nameen le" style="display:none">Phea Sopheak &amp; Bork Theavy</div>
+    </div>
+
+    <div class="guest-pill" id="guestPill">
+      <div class="gp-kh lk">ជំ​រាប​ សួរ​ <span class="gp-name" id="guestNameEl"></span></div>
+      <div class="gp-en le" style="display:none">Dear <span class="gp-name" id="guestNameEl2"></span>, welcome!</div>
+    </div>
+  </div>
+
+  <div class="p1-bottom">
+    <div class="kbach-bottom" id="p1kbachBot"></div>
+  </div>
+</div>
+
+<!-- ══════════ PAGE 2 · INVITATION ══════════ -->
+<div class="pg cream-bg" id="p2">
+  <!-- Corner ornaments -->
+  <svg class="p2-corner p2-tl" viewBox="0 0 70 70"><path d="M4 4 L32 4 M4 4 L4 32" fill="none" stroke="#C9A84C" stroke-width="1"/><path d="M4 4 C4 4 28 6 32 32" fill="none" stroke="#C9A84C" stroke-width=".5" opacity=".5"/><circle cx="4" cy="4" r="2.5" fill="#C9A84C" opacity=".7"/><circle cx="20" cy="4" r="1.2" fill="#C9A84C" opacity=".4"/><circle cx="4" cy="20" r="1.2" fill="#C9A84C" opacity=".4"/><path d="M14 4 C14 4 18 8 18 14 C18 20 14 24 10 24 C6 24 4 20 4 14" fill="none" stroke="#C9A84C" stroke-width=".5" opacity=".35"/></svg>
+  <svg class="p2-corner p2-tr" viewBox="0 0 70 70"><path d="M4 4 L32 4 M4 4 L4 32" fill="none" stroke="#C9A84C" stroke-width="1"/><path d="M4 4 C4 4 28 6 32 32" fill="none" stroke="#C9A84C" stroke-width=".5" opacity=".5"/><circle cx="4" cy="4" r="2.5" fill="#C9A84C" opacity=".7"/><circle cx="20" cy="4" r="1.2" fill="#C9A84C" opacity=".4"/><circle cx="4" cy="20" r="1.2" fill="#C9A84C" opacity=".4"/><path d="M14 4 C14 4 18 8 18 14 C18 20 14 24 10 24 C6 24 4 20 4 14" fill="none" stroke="#C9A84C" stroke-width=".5" opacity=".35"/></svg>
+  <svg class="p2-corner p2-bl" viewBox="0 0 70 70"><path d="M4 4 L32 4 M4 4 L4 32" fill="none" stroke="#C9A84C" stroke-width="1"/><path d="M4 4 C4 4 28 6 32 32" fill="none" stroke="#C9A84C" stroke-width=".5" opacity=".5"/><circle cx="4" cy="4" r="2.5" fill="#C9A84C" opacity=".7"/><circle cx="20" cy="4" r="1.2" fill="#C9A84C" opacity=".4"/><circle cx="4" cy="20" r="1.2" fill="#C9A84C" opacity=".4"/></svg>
+  <svg class="p2-corner p2-br" viewBox="0 0 70 70"><path d="M4 4 L32 4 M4 4 L4 32" fill="none" stroke="#C9A84C" stroke-width="1"/><path d="M4 4 C4 4 28 6 32 32" fill="none" stroke="#C9A84C" stroke-width=".5" opacity=".5"/><circle cx="4" cy="4" r="2.5" fill="#C9A84C" opacity=".7"/><circle cx="20" cy="4" r="1.2" fill="#C9A84C" opacity=".4"/><circle cx="4" cy="20" r="1.2" fill="#C9A84C" opacity=".4"/></svg>
+
+  <div class="p2-inner">
+    <div>
+      <div class="inv-khtit lk">ពិធីប្រារព្ធ​ ឡើង​ គេហដ្ឋាន​ ថ្មី</div>
+      <div class="inv-entit le" style="display:none">House Warming Party</div>
+    </div>
+
+    <div class="inv-sep">
+      <svg width="10" height="10" viewBox="0 0 10 10"><path d="M5 1C5 1 8 4 9.5 5C8 6 5 9 5 9C5 9 2 6 .5 5C2 4 5 1 5 1Z" fill="#C9A84C" opacity=".5"/></svg>
+    </div>
+
+    <div class="inv-bodykh lk">
+      គ្រួសារ ភា-បក់ ចូល​ ចិត្ត​ ជូន​ ការ​ អញ្ជើញ​ ដ៏​ ខ្ពង់​ ខ្ពស់<br>
+      ចំពោះ​ ព្រះ​ ភិក្ខុ​ ពុទ្ធ​ បរិស័ទ​ ទាំង​ ឡាយ<br>
+      លោក​ លោក​ ស្រី​ ភ្ញៀវវ​ ជា​ ទី​ គោរព​ រាប់​ អាន<br>
+      ទាំង​ ក្នុង​ ប្រទេស​ និង​ ក្រៅ​ ប្រទេស<br>
+      ឱ្យ​ ចូល​ រួម​ ក្នុង <span class="inv-highlight">ពិធី​ ប្រារព្ធ​ ឡើង​ គេហ​ ដ្ឋាន​ ថ្មី</span>
+    </div>
+    <div class="inv-bodyen le" style="display:none">
+      We have the great honor to invite<br>
+      Ladies &amp; Gentlemen, Friends &amp; Family<br>
+      both near and far,<br>
+      to celebrate our<br>
+      <span class="inv-highlighten">House Warming Ceremony</span>
+    </div>
+
+    <div class="inv-sep">
+      <svg width="9" height="9" viewBox="0 0 9 9"><circle cx="4.5" cy="4.5" r="2" fill="#C9A84C" opacity=".42"/></svg>
+    </div>
+
+    <div class="inv-namekh lk">ភា សុផាក់<br><span style="font-family:var(--fbatt);font-size:13px;color:var(--muted)">&amp;&nbsp;</span>បក់ ធាវី</div>
+    <div class="inv-nameen le" style="display:none">Phea Sopheak<br><span style="font-size:22px;color:var(--gold-l)">&amp;</span><br>Bork Theavy</div>
+
+    <div class="inv-sep">
+      <svg width="9" height="9" viewBox="0 0 9 9"><rect x="1.5" y="1.5" width="6" height="6" rx="1" fill="#C9A84C" opacity=".35"/></svg>
+    </div>
+
+    <div class="inv-datekh lk">
+      ថ្ងៃ <span class="inv-highlight">ចន្ទ</span> ទី <span class="inv-highlight">៣០</span> ខែ <span class="inv-highlight">មីនា</span> ឆ្នាំ <span class="inv-highlight">២០២៦</span><br>
+      វេលា​ ម៉ោង <span class="inv-highlight">៤:០០ ល្ងាច</span><br>
+      <span class="inv-addrkh lk">នៅ​ ក្នុង <span class="inv-highlight">បូរី​ ល្វីន​ ចាំង​ហាក់</span><br>ផ្លូវ ១៤N ភូមិ អង្គ​ សង្កាត់​ ចោម​ ចៅ<br>ខណ្ឌ​ ពោធ៍​ ចេតិយ​ ភ្នំ​ ពេញ</span>
+    </div>
+    <div class="inv-dateen le" style="display:none">
+      <span style="font-family:var(--fcin);font-size:10.5px;letter-spacing:.13em">MONDAY · 30 MARCH · 2026</span><br>
+      At <strong style="color:var(--gold-d)">4:00 PM</strong><br>
+      <span class="inv-addren"><strong style="color:var(--gold-d)">Borey Loem CheangHak</strong><br>#14N, Ang Village, Sangkat Kontork,<br>Khan Porsenchey, Phnom Penh</span>
+    </div>
+
+    <div class="inv-telkh lk" style="text-align:center;margin-top:4px">ទូរស័ព្ទ: <span class="tel-strong">096 66 88 929</span> / <span class="tel-strong">010 22 64 99</span></div>
+    <div class="inv-telen le" style="display:none;text-align:center;margin-top:4px">Tel: <span class="tel-strong">096 66 88 929</span> / <span class="tel-strong">010 22 64 99</span></div>
+  </div>
+</div>
+
+<!-- ══════════ PAGE 3 · DETAILS ══════════ -->
+<div class="pg light" id="p3">
+  <div class="p3-inner">
+    <div class="p3-hd">
+      <div class="p3-kh lk">ព័ត៌​ មាន​ លម្អិត</div>
+      <div class="p3-en le" style="display:none">Event Details</div>
+    </div>
+
+    <!-- Date pill -->
+    <div class="date-pill">
+      <div class="dp-cell">
+        <span class="dp-label">ខែ / Month</span>
+        <span class="dp-vkh lk">មីនា</span>
+        <span class="dp-ven le" style="display:none">March</span>
+      </div>
+      <div class="dp-divider"></div>
+      <div class="dp-cell">
+        <span class="dp-label">ថ្ងៃ / Day</span>
+        <span class="dp-big">30</span>
+        <span class="dp-sub lk">ចន្ទ</span>
+        <span class="dp-sub le" style="display:none">Monday</span>
+      </div>
+      <div class="dp-divider"></div>
+      <div class="dp-cell">
+        <span class="dp-label">ឆ្នាំ / Year</span>
+        <span class="dp-big" style="font-size:20px">2026</span>
+        <span class="dp-sub lk">ម៉ោង ៤:០០</span>
+        <span class="dp-sub le" style="display:none">4:00 PM</span>
+      </div>
+    </div>
+
+    <!-- Venue card -->
+    <div class="det-card">
+      <div class="dico">
+        <svg width="18" height="18" viewBox="0 0 18 18" fill="none">
+          <path d="M9 2C6.8 2 5 3.8 5 6c0 3.3 4 9 4 9s4-5.7 4-9c0-2.2-1.8-4-4-4z" stroke="#C9A84C" stroke-width="1.1"/>
+          <circle cx="9" cy="6" r="1.7" stroke="#C9A84C" stroke-width=".95"/>
+        </svg>
+      </div>
+      <div class="dbody">
+        <span class="d-lkh lk">ទី​ កន្លែង</span><span class="d-len le" style="display:none">Venue</span>
+        <span class="d-vkh lk">បូរី​ ល្វីន​ ចាំង​ហាក់</span>
+        <span class="d-ven le" style="display:none">Borey Loem CheangHak</span>
+        <span class="d-subkh lk">ផ្លូវ ១៤N ភូមិ អង្គ​ សង្កាត់​ ចោម​ ចៅ<br>ខណ្ឌ​ ពោធ៍​ ចេតិយ​ ភ្នំ​ ពេញ</span>
+        <span class="d-suben le" style="display:none">#14N, Ang Village, Sangkat Kontork,<br>Khan Porsenchey, Phnom Penh</span>
+      </div>
+    </div>
+
+    <!-- Map button -->
+    <a class="map-btn" href="https://maps.google.com/?q=Borey+Loem+CheangHak+Phnom+Penh" target="_blank">
+      <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+        <path d="M8 2C5.8 2 4 3.8 4 6c0 3.2 4 8.5 4 8.5s4-5.3 4-8.5C12 3.8 10.2 2 8 2z" stroke="#C9A84C" stroke-width="1"/>
+        <circle cx="8" cy="6" r="1.8" stroke="#C9A84C" stroke-width=".9"/>
+      </svg>
+      <div>
+        <div class="map-btn-kh lk">បើក​ ក្នុង​ Google Maps</div>
+        <div class="map-btn-en le" style="display:none">Open in Google Maps</div>
+      </div>
+    </a>
+
+    <!-- Hosts -->
+    <div style="font-family:var(--fcin);font-size:7px;letter-spacing:.2em;text-transform:uppercase;color:var(--muted);text-align:center">
+      <span class="lk">អ្នក​ រៀប​ ចំ</span><span class="le" style="display:none">Hosted by</span>
+    </div>
+    <div class="hosts-row">
+      <div class="hcard">
+        <span class="hrole">Groom's Side</span>
+        <span class="hnkh lk">ភា សុផាក់</span>
+        <span class="hnen le" style="display:none">Phea Sopheak</span>
+      </div>
+      <div class="hcard">
+        <span class="hrole">Bride's Side</span>
+        <span class="hnkh lk">បក់ ធាវី</span>
+        <span class="hnen le" style="display:none">Bork Theavy</span>
+      </div>
+    </div>
+
+    <!-- Tel -->
+    <div class="tel-card">
+      <span class="tel-hkh lk">ទំ​ នាក់​ ទំ​ នង</span>
+      <span class="tel-hen le" style="display:none">Contact</span>
+      <span class="tel-n">096 66 88 929</span>
+      <span class="tel-n">010 22 64 99</span>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════ PAGE 4 · CLOSING ══════════ -->
+<div class="pg dark" id="p4">
+  <div class="p4-bg"></div>
+  <div style="position:absolute;top:0;left:0;right:0;height:28px;overflow:hidden" id="p4kbach"></div>
+
+  <div class="p4-content">
+    <div class="p4-lotus" id="p4Lotus"></div>
+
+    <div class="p4-khtitle shimmer-text lk">ជួប​ គ្នា​ ក្នុង​ ពិធី!</div>
+    <div class="p4-entitle shimmer-text le">See You There!</div>
+
+    <div class="p4-divider">
+      <svg width="160" height="12" viewBox="0 0 160 12">
+        <line x1="0" y1="6" x2="58" y2="6" stroke="#C9A84C" stroke-width=".5" opacity=".35"/>
+        <line x1="102" y1="6" x2="160" y2="6" stroke="#C9A84C" stroke-width=".5" opacity=".35"/>
+        <path d="M80,6 m-18,0 a18,5 0 1,0 36,0 a18,5 0 1,0 -36,0" fill="none" stroke="#C9A84C" stroke-width=".5" opacity=".4"/>
+        <circle cx="80" cy="6" r="2" fill="#C9A84C" opacity=".6"/>
+      </svg>
+    </div>
+
+    <div class="p4-bodykh lk">
+      យើង​ ខ្ញុំ​ រំពឹង​ ទទួល​ ស្វាគមន៍​ លោក​ អ្នក<br>
+      ក្នុង​ ថ្ងៃ​ ពិធី​ ដ៏​ ពិសេស​ នេះ<br>
+      ការ​ ចូល​ រួម​ របស់​ លោក​ អ្នក<br>
+      ជា​ កិត្តិ​ យស​ ដ៏​ ធំ​ ធេង​ សម្រាប់​ ពួក​ យើង
+    </div>
+    <div class="p4-bodyen le" style="display:none">
+      Your presence would be the greatest honor.<br>
+      We look forward to celebrating<br>
+      this joyful milestone with you.
+    </div>
+
+    <div class="p4-tel">
+      <span class="p4-tel-label">ទំ​ នាក់​ ទំ​ នង​ · Contact</span>
+      <span class="p4-num">096 66 88 929</span>
+      <span class="p4-num">010 22 64 99</span>
+    </div>
+
+    <div class="p4-bottom-ornament" id="p4bottomOrn"></div>
+  </div>
+</div>
+
+</div><!-- #track -->
+
+<!-- DOTS -->
+<div id="dots">
+  <div class="dot on" onclick="goTo(0)"></div>
+  <div class="dot" onclick="goTo(1)"></div>
+  <div class="dot" onclick="goTo(2)"></div>
+  <div class="dot" onclick="goTo(3)"></div>
+  <div class="dot" onclick="goTo(4)"></div>
+</div>
+
+<!-- LANG FLAG BUTTON -->
+<button id="langBtn" onclick="toggleLang()">
+  <span class="fl" id="flagEm">🇬🇧</span>
+  <span class="fn" id="flagNm">EN</span>
+</button>
+
+<!-- DASHBOARD PANEL -->
+<div id="dash">
+  <div class="dash-top">
+    <div>
+      <div class="dash-title">Host Dashboard</div>
+      <div class="dash-sub">ភ្ញៀវវ​ / Guest Manager</div>
+    </div>
+    <button class="dash-close" onclick="closeDash()">Close ✕</button>
+  </div>
+  <div class="dash-body">
+    <div class="dash-stat-grid">
+      <div class="dsc"><span class="dsv" id="stot">0</span><span class="dslkh">ភ្ញៀវវ​ សរុប</span></div>
+      <div class="dsc"><span class="dsv" id="slinks">0</span><span class="dslkh">តំណ​ ភ្ជាប់</span></div>
+    </div>
+    <div class="dstit">Guest List &amp; Personalized Links</div>
+    <div class="add-row">
+      <input type="text" class="add-in" id="addIn" placeholder="ឈ្មោះ​ ភ្ញៀវវ... / Guest name...">
+      <button class="add-btn" onclick="addGuest()">+</button>
+    </div>
+    <div class="gl" id="guestList"></div>
+    <button class="exp-btn" onclick="exportCSV()">
+      <svg width="12" height="12" viewBox="0 0 12 12" fill="none"><rect x="1" y="7.5" width="10" height="3.5" rx="1" stroke="currentColor" stroke-width=".95"/><path d="M6 1v7M3.5 4.5l2.5 3 2.5-3" stroke="currentColor" stroke-width="1" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      Export Guest List (CSV)
+    </button>
+  </div>
+</div>
+
+<!-- LOGIN MODAL -->
+<div class="mo" id="loginMo" onclick="moOut(event)">
+  <div class="ms">
+    <div class="mbar"></div>
+    <div class="mt">Host Access</div>
+    <div class="mhint">បញ្ចូល​ លេខ​ សម្ងាត់ / Enter password</div>
+    <input type="password" class="mpw" id="pwIn" placeholder="••••••" onkeydown="if(event.key==='Enter')checkPw()">
+    <button class="mok" onclick="checkPw()">ចូល​ Dashboard / Access</button>
+    <button class="mcnl" onclick="closeMo()">Cancel</button>
+  </div>
+</div>
+
+</div><!-- #app -->
+<script>
+/* ─── STARS CANVAS ─── */
+(function() {
+  const canvas = document.getElementById('starCanvas');
+  const app = document.getElementById('app');
+  canvas.width = app.offsetWidth || 430;
+  canvas.height = window.innerHeight;
+  const ctx = canvas.getContext('2d');
+  const stars = Array.from({length: 55}, () => ({
+    x: Math.random() * canvas.width,
+    y: Math.random() * canvas.height,
+    r: Math.random() * 1.2 + 0.3,
+    a: Math.random(),
+    s: (Math.random() - 0.5) * 0.006
+  }));
+  function draw() {
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    stars.forEach(s => {
+      s.a += s.s;
+      if (s.a <= 0 || s.a >= 1) s.s *= -1;
+      ctx.beginPath();
+      ctx.arc(s.x, s.y, s.r, 0, Math.PI * 2);
+      ctx.fillStyle = `rgba(201,168,76,${s.a * 0.5})`;
+      ctx.fill();
+    });
+    requestAnimationFrame(draw);
+  }
+  draw();
+})();
+
+/* ─── LOTUS SVG GENERATOR ─── */
+function makeLotus(size, darkBg) {
+  const r = size / 2;
+  const gold = darkBg ? '#C9A84C' : '#C9A84C';
+  const goldL = darkBg ? '#E8D08A' : '#E8D08A';
+  const goldP = darkBg ? 'rgba(201,168,76,0.12)' : '#F5EAC8';
+  const op1 = darkBg ? '0.55' : '0.45';
+  const op2 = darkBg ? '0.35' : '0.28';
+
+  let outer = '', inner = '', outerGlow = '';
+  for (let i = 0; i < 8; i++) {
+    const a = (i / 8) * 360;
+    outer += `<path d="M0,0 C-${size*0.14},-${size*0.22} -${size*0.1},-${size*0.42} 0,-${size*0.5} C${size*0.1},-${size*0.42} ${size*0.14},-${size*0.22} 0,0Z" fill="${gold}" opacity="${op1}" transform="rotate(${a})"/>`;
+    outerGlow += `<path d="M0,0 C-${size*0.08},-${size*0.14} -${size*0.06},-${size*0.3} 0,-${size*0.36} C${size*0.06},-${size*0.3} ${size*0.08},-${size*0.14} 0,0Z" fill="${goldL}" opacity="${darkBg?'0.2':'0.15'}" transform="rotate(${a})"/>`;
+  }
+  for (let i = 0; i < 8; i++) {
+    const a = (i / 8) * 360 + 22.5;
+    inner += `<path d="M0,0 C-${size*0.09},-${size*0.14} -${size*0.07},-${size*0.28} 0,-${size*0.34} C${size*0.07},-${size*0.28} ${size*0.09},-${size*0.14} 0,0Z" fill="${goldL}" opacity="${op2}" transform="rotate(${a})"/>`;
+  }
+  return `<svg width="${size}" height="${size}" viewBox="0 0 ${size} ${size}" xmlns="http://www.w3.org/2000/svg">
+    <g transform="translate(${r},${r})">
+      <circle r="${size*0.52}" fill="${goldP}" opacity="${darkBg?'0.08':'0.5'}"/>
+      ${outer}${outerGlow}${inner}
+      <circle r="${size*0.14}" fill="${gold}" opacity="0.25"/>
+      <circle r="${size*0.10}" fill="${gold}" opacity="0.5"/>
+      <circle r="${size*0.05}" fill="${gold}" opacity="0.85"/>
+      <circle r="${size*0.14}" fill="none" stroke="${gold}" stroke-width="${size*0.008}" opacity="0.35"/>
+    </g>
+  </svg>`;
+}
+
+document.getElementById('coverLotus').innerHTML = makeLotus(110, true);
+document.getElementById('p1Lotus').innerHTML = makeLotus(78, false);
+document.getElementById('p4Lotus').innerHTML = makeLotus(100, true);
+
+/* ─── KBACH PATTERN GENERATOR ─── */
+function makeKbach(w, h, dark) {
+  const c = dark ? '#C9A84C' : '#C9A84C';
+  const op = dark ? '0.25' : '0.18';
+  const unit = 32;
+  const reps = Math.ceil(w / unit) + 1;
+  let pattern = '';
+  for (let i = 0; i < reps; i++) {
+    const x = i * unit;
+    // stylized lotus bud on stem
+    pattern += `
+      <line x1="${x+16}" y1="${h}" x2="${x+16}" y2="${h*0.35}" stroke="${c}" stroke-width=".7" opacity="${op}"/>
+      <path d="M${x+16},${h*0.35} C${x+11},${h*0.1} ${x+21},${h*0.1} ${x+16},${h*0.35}Z" fill="${c}" opacity="${op}"/>
+      <path d="M${x+16},${h*0.45} C${x+8},${h*0.35} ${x+4},${h*0.7} ${x},${h}" stroke="${c}" stroke-width=".5" fill="none" opacity="${parseFloat(op)*0.6}"/>
+      <path d="M${x+16},${h*0.45} C${x+24},${h*0.35} ${x+28},${h*0.7} ${x+32},${h}" stroke="${c}" stroke-width=".5" fill="none" opacity="${parseFloat(op)*0.6}"/>
+    `;
+  }
+  return `<svg width="100%" height="${h}" viewBox="0 0 ${w} ${h}" preserveAspectRatio="xMidYMid meet" xmlns="http://www.w3.org/2000/svg" style="display:block">${pattern}</svg>`;
+}
+
+function makeKbachFlip(w, h, dark) {
+  const c = dark ? '#C9A84C' : '#C9A84C';
+  const op = dark ? '0.25' : '0.18';
+  const unit = 32;
+  const reps = Math.ceil(w / unit) + 1;
+  let pattern = '';
+  for (let i = 0; i < reps; i++) {
+    const x = i * unit;
+    pattern += `
+      <line x1="${x+16}" y1="0" x2="${x+16}" y2="${h*0.65}" stroke="${c}" stroke-width=".7" opacity="${op}"/>
+      <path d="M${x+16},${h*0.65} C${x+11},${h*0.9} ${x+21},${h*0.9} ${x+16},${h*0.65}Z" fill="${c}" opacity="${op}"/>
+      <path d="M${x+16},${h*0.55} C${x+8},${h*0.65} ${x+4},${h*0.3} ${x},0" stroke="${c}" stroke-width=".5" fill="none" opacity="${parseFloat(op)*0.6}"/>
+      <path d="M${x+16},${h*0.55} C${x+24},${h*0.65} ${x+28},${h*0.3} ${x+32},0" stroke="${c}" stroke-width=".5" fill="none" opacity="${parseFloat(op)*0.6}"/>
+    `;
+  }
+  return `<svg width="100%" height="${h}" viewBox="0 0 ${w} ${h}" preserveAspectRatio="xMidYMid meet" xmlns="http://www.w3.org/2000/svg" style="display:block">${pattern}</svg>`;
+}
+
+const W = document.getElementById('app').offsetWidth || 430;
+document.getElementById('p0kbach').innerHTML = makeKbach(W, 28, true);
+document.getElementById('p1kbachTop').innerHTML = makeKbachFlip(W, 28, false);
+document.getElementById('p1kbachBot').innerHTML = makeKbach(W, 28, false);
+document.getElementById('p4kbach').innerHTML = makeKbachFlip(W, 28, true);
+
+/* ─── P4 BOTTOM ORNAMENT ─── */
+document.getElementById('p4bottomOrn').innerHTML = `<svg width="200" height="22" viewBox="0 0 200 22">
+  <line x1="0" y1="11" x2="75" y2="11" stroke="#C9A84C" stroke-width=".5" opacity=".3"/>
+  <line x1="125" y1="11" x2="200" y2="11" stroke="#C9A84C" stroke-width=".5" opacity=".3"/>
+  <g transform="translate(100,11)">
+    <path d="M0,0 C-5,-7 -3,-14 0,-18 C3,-14 5,-7 0,0Z" fill="#C9A84C" opacity=".35"/>
+    <path d="M0,0 C-5,7 -3,14 0,18 C3,14 5,7 0,0Z" fill="#C9A84C" opacity=".35"/>
+    <circle r="2.5" fill="#C9A84C" opacity=".55"/>
+    <circle cx="-14" cy="0" r="1.5" fill="#C9A84C" opacity=".3"/>
+    <circle cx="14" cy="0" r="1.5" fill="#C9A84C" opacity=".3"/>
+  </g>
+</svg>`;
+
+/* ─── SWIPE / NAVIGATION ─── */
+const track = document.getElementById('track');
+const PAGES = 5;
+let cur = 0, startX = 0, startY = 0, dragging = false, dragDelta = 0;
+let lastTime = 0, velocity = 0;
+
+function goTo(n, skipTransition) {
+  n = Math.max(0, Math.min(PAGES - 1, n));
+  cur = n;
+  if (skipTransition) {
+    track.style.transition = 'none';
+  } else {
+    track.style.transition = 'transform 0.48s cubic-bezier(0.4,0,0.2,1)';
+  }
+  track.style.transform = `translateX(${-n * 100}%)`;
+  document.querySelectorAll('.dot').forEach((d, i) => d.classList.toggle('on', i === n));
+  // hide langBtn on dark pages
+  const lb = document.getElementById('langBtn');
+  lb.style.background = (n === 0 || n === 4) ? 'rgba(255,253,245,0.1)' : 'rgba(255,253,245,0.9)';
+  document.getElementById('flagNm').style.color = (n === 0 || n === 4) ? 'rgba(232,208,138,0.8)' : 'var(--gold-d)';
+  document.getElementById('flagEm').style.opacity = (n === 0 || n === 4) ? '0.85' : '1';
+}
+
+track.addEventListener('touchstart', e => {
+  startX = e.touches[0].clientX;
+  startY = e.touches[0].clientY;
+  dragging = false;
+  dragDelta = 0;
+  velocity = 0;
+  lastTime = Date.now();
+  track.style.transition = 'none';
+}, { passive: true });
+
+track.addEventListener('touchmove', e => {
+  const dx = e.touches[0].clientX - startX;
+  const dy = Math.abs(e.touches[0].clientY - startY);
+
+  // Determine axis lock
+  if (!dragging && Math.abs(dx) < 8 && dy < 8) return;
+  if (!dragging) {
+    if (dy > Math.abs(dx)) return; // vertical scroll intent
+    dragging = true;
+  }
+
+  e.preventDefault();
+  dragDelta = dx;
+  const now = Date.now();
+  velocity = dx / (now - lastTime) * 1000;
+  lastTime = now;
+
+  const base = -cur * 100;
+  const pct = base + (dx / (document.getElementById('app').offsetWidth || 430)) * 100;
+  const clamped = Math.max(-(PAGES - 1) * 100, Math.min(0, pct));
+  track.style.transform = `translateX(${clamped}%)`;
+}, { passive: false });
+
+track.addEventListener('touchend', () => {
+  if (!dragging) return;
+  dragging = false;
+  const threshold = 45;
+  const velThreshold = 350;
+  if (dragDelta < -threshold || velocity < -velThreshold) goTo(cur + 1);
+  else if (dragDelta > threshold || velocity > velThreshold) goTo(cur - 1);
+  else goTo(cur);
+});
+
+// Mouse drag support
+let mouseDown = false, mouseStartX = 0;
+track.addEventListener('mousedown', e => { mouseDown = true; mouseStartX = e.clientX; track.style.transition = 'none'; });
+track.addEventListener('mousemove', e => {
+  if (!mouseDown) return;
+  const dx = e.clientX - mouseStartX;
+  const base = -cur * 100;
+  const pct = base + (dx / (document.getElementById('app').offsetWidth || 430)) * 100;
+  track.style.transform = `translateX(${Math.max(-(PAGES-1)*100, Math.min(0, pct))}%)`;
+});
+track.addEventListener('mouseup', e => {
+  if (!mouseDown) return;
+  mouseDown = false;
+  const dx = e.clientX - mouseStartX;
+  if (dx < -45) goTo(cur + 1);
+  else if (dx > 45) goTo(cur - 1);
+  else goTo(cur);
+});
+track.addEventListener('mouseleave', () => { if (mouseDown) { mouseDown = false; goTo(cur); } });
+
+// Arrow keys
+document.addEventListener('keydown', e => {
+  if (e.key === 'ArrowRight') goTo(cur + 1);
+  if (e.key === 'ArrowLeft') goTo(cur - 1);
+});
+
+/* ─── LANGUAGE ─── */
+let lang = 'k';
+function setLang(l) {
+  lang = l;
+  document.querySelectorAll('.lk').forEach(el => el.style.display = l === 'k' ? '' : 'none');
+  document.querySelectorAll('.le').forEach(el => el.style.display = l === 'e' ? '' : 'none');
+  document.getElementById('flagEm').textContent = l === 'k' ? '🇬🇧' : '🇰🇭';
+  document.getElementById('flagNm').textContent = l === 'k' ? 'EN' : 'ខ្មែរ';
+}
+function toggleLang() { setLang(lang === 'k' ? 'e' : 'k'); }
+setLang('k');
+
+/* ─── GUEST NAME FROM URL ─── */
+const PW = '1234';
+const BASE = location.href.split('?')[0];
+const urlGuest = new URLSearchParams(location.search).get('guest');
+if (urlGuest) {
+  const name = decodeURIComponent(urlGuest);
+  document.getElementById('guestNameEl').textContent = name;
+  document.getElementById('guestNameEl2').textContent = name;
+  document.getElementById('guestPill').style.display = 'block';
+}
+
+/* ─── GUEST STORAGE ─── */
+let guests = JSON.parse(localStorage.getItem('hwg3') || '[]');
+function saveGuests() { localStorage.setItem('hwg3', JSON.stringify(guests)); }
+function mkLink(n) { return BASE + '?guest=' + encodeURIComponent(n); }
+
+function addGuest() {
+  const inp = document.getElementById('addIn');
+  const n = inp.value.trim();
+  if (!n) return;
+  if (!guests.find(g => g.name.toLowerCase() === n.toLowerCase())) {
+    guests.push({ name: n, ts: Date.now() });
+    saveGuests();
+    renderDash();
+  }
+  inp.value = '';
+  inp.focus();
+}
+function delGuest(i) { guests.splice(i, 1); saveGuests(); renderDash(); }
+function copyLink(i, btn) {
+  const url = mkLink(guests[i].name);
+  const done = () => { btn.textContent = 'Copied ✓'; btn.classList.add('done'); setTimeout(() => { btn.textContent = 'Copy'; btn.classList.remove('done'); }, 2400); };
+  if (navigator.clipboard) navigator.clipboard.writeText(url).then(done).catch(() => { fbCopy(url); done(); });
+  else { fbCopy(url); done(); }
+}
+function fbCopy(t) { const ta = document.createElement('textarea'); ta.value = t; document.body.appendChild(ta); ta.select(); document.execCommand('copy'); document.body.removeChild(ta); }
+function renderDash() {
+  document.getElementById('stot').textContent = guests.length;
+  document.getElementById('slinks').textContent = guests.length;
+  const gl = document.getElementById('guestList');
+  if (!guests.length) { gl.innerHTML = '<div class="gl-empty">មិន​ ទាន់​ មាន​ ភ្ញៀវវ​ / No guests yet</div>'; return; }
+  gl.innerHTML = guests.map((g, i) => {
+    const ini = g.name.trim().split(/\s+/).map(w => w[0] || '').join('').toUpperCase().slice(0, 2) || '?';
+    const url = mkLink(g.name);
+    const short = url.length > 38 ? url.slice(0, 38) + '…' : url;
+    return `<div class="gi"><div class="gi-top"><div class="gav">${ini}</div><div class="ginfo"><span class="gn">${g.name}</span><span class="gnote">Personalized invite</span></div><button class="gdel" onclick="delGuest(${i})">✕</button></div><div class="gi-link"><span class="glurl" title="${url}">${short}</span><button class="gcpy" id="cpb${i}" onclick="copyLink(${i},this)">Copy</button></div></div>`;
+  }).join('');
+}
+function exportCSV() {
+  if (!guests.length) return;
+  const rows = ['Name,Invite Link'];
+  guests.forEach(g => rows.push(`"${g.name}","${mkLink(g.name)}"`));
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(new Blob([rows.join('\n')], { type: 'text/csv' }));
+  a.download = 'guest-list.csv';
+  a.click();
+}
+
+/* ─── DASHBOARD PANEL ─── */
+function openDash() { document.getElementById('dash').classList.add('open'); renderDash(); }
+function closeDash() { document.getElementById('dash').classList.remove('open'); }
+
+/* ─── LOGIN MODAL ─── */
+function showLogin() { document.getElementById('loginMo').classList.add('open'); setTimeout(() => document.getElementById('pwIn').focus(), 320); }
+function closeMo() { document.getElementById('loginMo').classList.remove('open'); document.getElementById('pwIn').value = ''; }
+function moOut(e) { if (e.target === document.getElementById('loginMo')) closeMo(); }
+function checkPw() {
+  if (document.getElementById('pwIn').value === PW) { closeMo(); openDash(); }
+  else {
+    const i = document.getElementById('pwIn');
+    i.style.borderColor = '#c0392b'; i.value = ''; i.placeholder = 'Incorrect...';
+    setTimeout(() => { i.style.borderColor = ''; i.placeholder = '••••••'; }, 1600);
+  }
+}
+document.getElementById('addIn').addEventListener('keydown', e => { if (e.key === 'Enter') addGuest(); });
+
+/* ─── INIT ─── */
+track.style.transition = 'none';
+track.style.transform = 'translateX(0%)';
+setTimeout(() => { track.style.transition = ''; }, 50);
+</script>
+</body>
+</html>
